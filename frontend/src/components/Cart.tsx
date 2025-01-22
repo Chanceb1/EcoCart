@@ -36,7 +36,7 @@ export default function Cart() {
                         name={item.name}
                         quantity={item.quantity}
                         price={item.price}
-                        onIncrease={() => cartCtx.addItem({item})}
+                        onIncrease={() => cartCtx.addItem(item)}
                         onDecrease={() => cartCtx.removeItem(item.id)}
                     />
                 ))}
