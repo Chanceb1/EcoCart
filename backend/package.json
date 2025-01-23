@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon --watch 'app.ts' --exec 'ts-node' app.ts"
+    "dev": "nodemon --watch 'src/app.ts' --exec 'ts-node' src/app.ts"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
