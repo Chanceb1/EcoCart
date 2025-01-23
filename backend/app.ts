@@ -24,23 +24,24 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // Route to get meals
-app.get('/meals', async (req: Request, res: Response) => {
+app.get('/meals', async (req, res) => {
   try {
     const meals = await fs.readFile('./data/available-meals.json', 'utf8');
-
     res.json(JSON.parse(meals));
+
   } catch (error) {
     res.status(500).json({ message: 'Failed to load meals.' });
   }
 });
 
 // Route to get orders
-app.post('/orders', async (req: Request, res: Response): Promise<any> => {
+app.post('/orders', async (req, res) => {
   try {
     const orderData: Order = req.body.order;
 
     if (!orderData || !orderData.items || orderData.items.length === 0) {
-      return res.status(400).json({ message: 'Invalid order data received.' });
+      res.status(400).json({ message: 'Invalid order data received.' });
+      return;
     }
 
     if (
@@ -55,7 +56,7 @@ app.post('/orders', async (req: Request, res: Response): Promise<any> => {
       orderData.customer.city === null ||
       orderData.customer.city.trim() === ''
     ) {
-      return res.status(400).json({
+      return void res.status(400).json({
         message:
           'Missing data: Email, name, street, postal code or city is missing.',
       });
@@ -79,7 +80,7 @@ app.post('/orders', async (req: Request, res: Response): Promise<any> => {
 });
 
 // Handle unknown routes
-app.use((req: Request, res: Response) => {
+app.use((req, res) => {
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   }
@@ -87,7 +88,7 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ message: 'Not found' });
 });
 
-
+// Start server
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

@@ -13,7 +13,7 @@ export default function Modal({ children, open, onClose, className = '' }: Modal
 
     useEffect(() => {
         const modal = dialog.current;
-        
+
         if (open && modal) {
             modal.showModal();
         }
@@ -29,7 +29,10 @@ export default function Modal({ children, open, onClose, className = '' }: Modal
     if (!portalElement) return null;
 
     return createPortal(
-        <dialog ref={dialog} className={`modal ${className}`} onClose={onClose}>
+        <dialog
+            ref={dialog}
+            className={`modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${className}`}
+            onClose={onClose}>
             {children}
         </dialog>,
         portalElement
