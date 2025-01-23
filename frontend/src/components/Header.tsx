@@ -1,4 +1,4 @@
-import {useContext } from 'react';
+import { useContext } from 'react';
 import logo from '../assets/logo.jpg';
 import Button from './UI/Button';
 import CartContext from '../store/CartContext';
@@ -20,7 +20,7 @@ export default function Header() {
     return (
         <header id="main-header">
             <div id="title">
-                <img src={logo} alt="resturant"/>
+                <img src={logo} alt="resturant" />
                 <h1>Green E-Commerce Shop</h1>
             </div>
             <nav>

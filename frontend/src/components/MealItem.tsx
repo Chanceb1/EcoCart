@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { currencyFormatter } from "../Utils/formatting";
-import Button from "./UI/Button";
-import { CartContext } from "../store/CartContext";
+import { useContext } from 'react';
+import { currencyFormatter } from '../Utils/formatting';
+import Button from './UI/Button';
+import { CartContext } from '../store/CartContext';
 
 export interface Meal {
     id: string;
@@ -25,7 +25,10 @@ export default function MealItem({ meal }: MealItemProps): JSX.Element {
     return (
         <li className="meal-item">
             <article>
-                <img src={`http://localhost:5000/${meal.image}`} alt={meal.name} />
+                <img
+                    src={`http://localhost:5000/${meal.image}`}
+                    alt={meal.name}
+                />
                 <div>
                     <h3>{meal.name}</h3>
                     <p className="meal-item-price">
@@ -34,7 +37,13 @@ export default function MealItem({ meal }: MealItemProps): JSX.Element {
                     <p className="meal-item-description">{meal.description}</p>
                 </div>
                 <p className="male-item-actions">
-                    <Button onClick={handleAddMealToCart} textOnly={true} className="add-to-cart-button">Add to Cart</Button>
+                    <Button
+                        onClick={handleAddMealToCart}
+                        textOnly={true}
+                        className="add-to-cart-button"
+                    >
+                        Add to Cart
+                    </Button>
                 </p>
             </article>
         </li>

@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useState } from 'react';
 
 type Progress = '' | 'cart' | 'checkout';
 
@@ -8,11 +8,11 @@ type UserProgressContextType = {
     hideCart: () => void;
     showCheckout: () => void;
     hideCheckout: () => void;
-}
+};
 
 type UserProgressContextProviderProps = {
     children: ReactNode;
-}
+};
 
 const UserProgressContext = createContext<UserProgressContextType>({
     progress: '', // 'cart', 'checkouot'
@@ -22,14 +22,16 @@ const UserProgressContext = createContext<UserProgressContextType>({
     hideCheckout: () => {}
 });
 
-export function UserProgressContextProvider({ children }: UserProgressContextProviderProps): JSX.Element {
+export function UserProgressContextProvider({
+    children
+}: UserProgressContextProviderProps): JSX.Element {
     const [userProgress, setUserProgress] = useState<Progress>('');
 
     function showCart(): void {
         setUserProgress('cart');
     }
 
-    function hideCart(): void {   
+    function hideCart(): void {
         setUserProgress('');
     }
 

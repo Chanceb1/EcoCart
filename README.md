@@ -5,36 +5,43 @@ A full-stack web application built with React + TypeScript frontend and Express.
 ## Tech Stack
 
 ### Frontend
-- React 18
-- TypeScript
-- Vite
-- Context API for state management
+
+-   React 18
+-   TypeScript
+-   Vite
+-   Context API for state management
 
 ### Backend
-- Express.js
-- Node.js
-- TypeScript
+
+-   Express.js
+-   Node.js
+-   TypeScript
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js >= 14
-- npm or yarn
-- PostgreSQL
+
+-   Node.js >= 14
+-   npm or yarn
+-   PostgreSQL
 
 ### Installation
 
 1. Clone the repository:
+
 ```
 git clone [repository-url]
 ```
+
 2. Install backend dependencies:
+
 ```
 cd backend
 npm install
 ```
 
 3. Install frontend dependencies:
+
 ```
 cd frontend
 npm install
@@ -43,6 +50,7 @@ npm install
 ## Running the Application
 
 1. Start the backend server (in backend directory):
+
 ```
 npm start
 ```

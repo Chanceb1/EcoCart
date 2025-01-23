@@ -8,7 +8,12 @@ interface ModalProps {
     className?: string;
 }
 
-export default function Modal({ children, open, onClose, className = '' }: ModalProps) {
+export default function Modal({
+    children,
+    open,
+    onClose,
+    className = ''
+}: ModalProps) {
     const dialog = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
@@ -32,7 +37,8 @@ export default function Modal({ children, open, onClose, className = '' }: Modal
         <dialog
             ref={dialog}
             className={`modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${className}`}
-            onClose={onClose}>
+            onClose={onClose}
+        >
             {children}
         </dialog>,
         portalElement

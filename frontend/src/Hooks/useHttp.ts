@@ -6,7 +6,10 @@ interface RequestConfig extends RequestInit {
     body?: string;
 }
 
-async function sendHttpRequest<T>(url: string, config?: RequestConfig): Promise<T> {
+async function sendHttpRequest<T>(
+    url: string,
+    config?: RequestConfig
+): Promise<T> {
     const response = await fetch(url, config);
     const resData = await response.json();
 
@@ -21,7 +24,7 @@ export default function useHttp<T>(
     url: string,
     config?: RequestConfig,
     initialData?: T
-){
+) {
     const [data, setData] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
@@ -34,16 +37,24 @@ export default function useHttp<T>(
         async function sendRequest(data?: string): Promise<void> {
             setIsLoading(true);
             try {
-                const resData = await sendHttpRequest<T>(url, { ...config, body: data });
+                const resData = await sendHttpRequest<T>(url, {
+                    ...config,
+                    body: data
+                });
                 setData(resData);
             } catch (error) {
                 setError(error.message || 'Something went wrong');
             }
             setIsLoading(false);
-        }, [url, config]);
+        },
+        [url, config]
+    );
 
     useEffect(() => {
-        if (config && (config.method === 'GET' || !config.method) || !config) {
+        if (
+            (config && (config.method === 'GET' || !config.method)) ||
+            !config
+        ) {
             sendRequest();
         }
     }, [sendRequest, config]);
@@ -53,6 +64,6 @@ export default function useHttp<T>(
         isLoading,
         error,
         sendRequest,
-        clearData,
+        clearData
     };
 }

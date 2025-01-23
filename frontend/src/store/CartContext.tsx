@@ -1,27 +1,27 @@
-import { ReactNode, createContext, useReducer  } from "react";
+import { ReactNode, createContext, useReducer } from 'react';
 
 type CartItem = {
     id: string;
     name: string;
     price: number;
     quantity: number;
-}
+};
 
 type CartContextType = {
-    items: CartItem[],
-    addItem: (item: CartItem) => void,
-    removeItem: (id: string) => void,
-    clearCart: () => void
-}
+    items: CartItem[];
+    addItem: (item: CartItem) => void;
+    removeItem: (id: string) => void;
+    clearCart: () => void;
+};
 
 type CartContextProviderProps = {
     children: ReactNode;
-}
+};
 
 export const CartContext = createContext<CartContextType>({
     items: [],
-    addItem: (item) => {},
-    removeItem: (id) => {},
+    addItem: item => {},
+    removeItem: id => {},
     clearCart: () => {}
 });
 
@@ -30,7 +30,7 @@ function cartReducer(state: any, action: any) {
         const existingCartItemIndex = state.items.findIndex(
             (item: any) => item.id === action.item.id
         );
-        
+
         const updatedItems = [...state.items];
 
         if (existingCartItemIndex > -1) {
@@ -41,11 +41,12 @@ function cartReducer(state: any, action: any) {
             };
             updatedItems[existingCartItemIndex] = updatedItem;
         } else {
-            updatedItems.push({...action.item, quantity: 1});
+            updatedItems.push({ ...action.item, quantity: 1 });
         }
 
         return {
-            ...state, items: updatedItems
+            ...state,
+            items: updatedItems
         };
     }
 
@@ -53,7 +54,7 @@ function cartReducer(state: any, action: any) {
         const existingCartItemIndex = state.items.findIndex(
             (item: any) => item.id === action.id
         );
-        
+
         const existingCartItem = state.items[existingCartItemIndex];
 
         const updatedItems = [...state.items];
@@ -69,7 +70,8 @@ function cartReducer(state: any, action: any) {
         }
 
         return {
-            ...state, items: updatedItems
+            ...state,
+            items: updatedItems
         };
     }
 
@@ -81,7 +83,7 @@ function cartReducer(state: any, action: any) {
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-    const [ cart, dispatchCartAction ] = useReducer(cartReducer, { items: [] });
+    const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
 
     function addItem(item: CartItem) {
         dispatchCartAction({ type: 'ADD_ITEM', item });
@@ -100,7 +102,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         addItem,
         removeItem,
         clearCart
-    }
+    };
 
     console.log(cartContext); // temporary
 
