@@ -3,8 +3,10 @@
 /* This file is used for global styles that apply 
   across the entire application */
 
-* {
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {

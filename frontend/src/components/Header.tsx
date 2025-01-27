@@ -21,7 +21,7 @@ export default function Header() {
         <header id="main-header">
             <div id="title">
                 <img src={logo} alt="resturant" />
-                <h1>Green E-Commerce Shop</h1>
+                <h1>EcoCart</h1>
             </div>
             <nav>
                 <Button textOnly onClick={handleShowCart}>
