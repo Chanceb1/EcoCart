@@ -14,6 +14,8 @@ import {
     navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 
+import {ModeToggle} from './Theme/ModeToggle';
+
 const components: { title: string; href: string; description: string }[] = [
     {
         title: 'Alert Dialog',
@@ -54,6 +56,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Header() {
     return (
+    <div className="flex justify-center items-center w-full px-4 py-2 border-b">
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
@@ -126,8 +129,10 @@ export default function Header() {
                         </NavigationMenuLink>
                     </Link> */}
                 </NavigationMenuItem>
+                <ModeToggle />
             </NavigationMenuList>
         </NavigationMenu>
+        </div>
     );
 }
 
