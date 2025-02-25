@@ -1,12 +1,8 @@
-import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-interface DefaultLayoutProps {
-  children: ReactNode;
-}
-
-const DefaultLayout = ({ children }: DefaultLayoutProps) => {
+const DefaultLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Fixed Navbar */}
@@ -16,7 +12,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 
       {/* Main Content */}
       <main className="flex-grow mt-16 px-4">
-        {children}
+        <Outlet />
       </main>
 
       {/* Footer */}

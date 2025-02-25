@@ -1,16 +1,34 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-6">
-      <div className="container mx-auto text-center">
-        <p>&copy; {new Date().getFullYear()} EcoCart. All rights reserved.</p>
-        <div className="mt-2">
-          <a href="/privacy" className="hover:text-green-400 mx-2">Privacy Policy</a>
-          <a href="/terms" className="hover:text-green-400 mx-2">Terms of Service</a>
-          <a href="/contact" className="hover:text-green-400 mx-2">Contact Us</a>
+    <footer className="border-t bg-background text-foreground">
+      <div className="container mx-auto text-center py-6">
+      <p className="text-foreground/80">&copy; {new Date().getFullYear()} EcoCart. All rights reserved.</p> 
+        <br/>
+        <div className="mt-2 space-x-4">
+          <Link
+            to="/privacy" 
+            className="text-muted-foreground hover:text-green-400 transition-colors"
+          >
+            Privacy Policy
+          </Link>
+          <Link 
+            to="/terms" 
+            className="text-muted-foreground hover:text-green-400 transition-colors"
+          >
+            Terms of Service
+          </Link>
+          <Link
+            to="/contact" 
+            className="text-muted-foreground hover:text-green-400 transition-colors"
+          >
+            Contact Us
+          </Link>
         </div>
       </div>
     </footer>
   );
 };
 
-export default Footer;
+export default Footer

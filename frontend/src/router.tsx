@@ -9,11 +9,11 @@ import ErrorPage from './pages/ErrorPage';
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <DefaultLayout>{null}</DefaultLayout>,
+        element: <DefaultLayout />,
         errorElement: <ErrorPage />,
         children: [
             {
-                index: true,
+                index: true, // declares route will be shown at the root URL
                 element: <HomePage />
             },
             {
