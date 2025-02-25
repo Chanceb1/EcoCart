@@ -4,13 +4,13 @@ import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
-import ErrorPage from './pages/ErrorPage';
+import Error from './pages/ErrorPage';
 
 export const router = createBrowserRouter([
     {
         path: '/',
         element: <DefaultLayout />,
-        errorElement: <ErrorPage />,
+        errorElement: <Error />,
         children: [
             {
                 index: true, // declares route will be shown at the root URL

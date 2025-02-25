@@ -3,7 +3,7 @@ import CartContext from '../store/CartContext';
 import { currencyFormatter } from '../Utils/formatting';
 import UserProgressContext from '../store/UserProgressContext';
 import useHttp from '../Hooks/useHttp';
-import Error from './Error';
+import Error from '../pages/ErrorPage';
 
 const requestConfig = {
     method: 'POST',
