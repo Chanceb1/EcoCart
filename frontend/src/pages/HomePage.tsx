@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/UI/Button';
 import { Link } from 'react-router-dom';
+import EcoIcon from '@/assets/eco-friendly-icon.svg';
 
 const HomePage = () => {
     return (
@@ -43,8 +44,8 @@ const HomePage = () => {
             </div>
             <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
                 <img
-                    className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-                    src="https://images.unsplash.com/photo-1483419035339-52ddc39c39da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                    className="h-24 w-full object-contain sm:h-32 md:h-40 lg:w-full lg:h-1/2"
+                    src={EcoIcon}
                     alt="Eco-friendly products"
                 />
             </div>
