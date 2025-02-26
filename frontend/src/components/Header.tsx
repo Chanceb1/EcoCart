@@ -77,6 +77,15 @@ export default function Header() {
                                 Products
                             </Link>
                         </NavigationMenuItem>
+
+                        <NavigationMenuItem>
+                            <Link
+                                to="/about"
+                                className={navigationMenuTriggerStyle()}
+                            >
+                                About
+                            </Link>
+                        </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
 

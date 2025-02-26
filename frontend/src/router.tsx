@@ -2,15 +2,16 @@ import { createBrowserRouter } from 'react-router-dom';
 import DefaultLayout from './layouts/DefaultLayout';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
+import AboutPage from './pages/AboutPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
-import Error from './pages/ErrorPage';
+import ErrorPage from './pages/ErrorPage';
 
 export const router = createBrowserRouter([
     {
         path: '/',
         element: <DefaultLayout />,
-        errorElement: <Error />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 index: true, // declares route will be shown at the root URL
@@ -21,13 +22,18 @@ export const router = createBrowserRouter([
                 element: <ProductsPage />
             },
             {
-                path: 'cart',
-                element: <CartPage />
+                path: 'about',
+                element: <AboutPage />
             },
             {
-                path: 'checkout',
-                element: <CheckoutPage />
+                path: 'cart',
+                element: <CartPage />
             }
         ]
+    },
+    {
+        path: 'checkout',
+        element: <CheckoutPage />,
+        errorElement: <ErrorPage />
     }
 ]);
