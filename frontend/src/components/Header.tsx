@@ -56,7 +56,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Header() {
     return (
-        <div className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-2 bg-background border-b">
+        <div className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-2 bg-background/80 border-b backdrop-blur-sm">
             <div className="container mx-auto flex justify-between items-center">
                 <NavigationMenu>
                     <NavigationMenuList>
