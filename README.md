@@ -6,8 +6,9 @@ A full-stack web application built with React + TypeScript frontend and Express.
 
 ### Frontend
 
--   React 18
--   TypeScript
+-   React 19
+-   TypeScript + SWC
+-   TailwindCSS
 -   Vite
 -   Context API for state management
 
