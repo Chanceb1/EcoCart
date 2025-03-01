@@ -46,7 +46,7 @@ export default function CartPage() {
                 </h1>
                 <hr />
                 {cart.length === 0 ? (
-                    <p className="text-gray-500">Your cart is empty.</p>
+                    <p className="text-gray-500 mt-6">Your cart is empty.</p>
                 ) : (
                     <ul className="mt-6">
                         {cart.map(item => (
@@ -55,7 +55,10 @@ export default function CartPage() {
                                 className="flex justify-between items-center mt-3"
                             >
                                 <span>
-                                    {item.name} <Badge>${item.price}</Badge>
+                                    {item.name}{' '}
+                                    <Badge className="ml-2">
+                                        ${item.price}
+                                    </Badge>
                                 </span>
                                 <div className="flex items-center gap-2">
                                     <Button
@@ -93,13 +96,13 @@ export default function CartPage() {
                         ))}
                     </ul>
                 )}
-
-                <p className="mt-4 font-bold text-right">
-                    Total: ${totalPrice}
-                </p>
-                {cart.length > 0 && (
-                    <Button className="mt-4 w-full">Proceed to Checkout</Button>
-                )}
+                <hr className="mt-6 mb-2" />
+                <div className="flex justify-between items-center">
+                    <Button disabled={!cart.length} className="mt-4 px-8">
+                        Proceed to Checkout
+                    </Button>
+                    <p className="mt-4 font-bold">Total: ${totalPrice}</p>
+                </div>
             </div>
         </div>
     );
