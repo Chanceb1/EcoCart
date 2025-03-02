@@ -1,6 +1,6 @@
 import { useRouteError } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import { Button } from '@/components/UI/Button'; // Import the Button component
+import { Button } from '@/components/ui/Button'; // Import the Button component
 
 export default function ErrorPage() {
     const error = useRouteError() as { statusText?: string; message?: string };

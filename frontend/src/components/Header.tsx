@@ -12,7 +12,7 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
     navigationMenuTriggerStyle
-} from '@/components/UI/navigation-menu';
+} from '@/components/ui/navigation-menu';
 
 import { ModeToggle } from './Theme/ModeToggle';
 
@@ -90,6 +90,12 @@ export default function Header() {
                 </NavigationMenu>
 
                 <div className="flex items-center gap-2">
+                        <Link
+                            to="/account"
+                            className={navigationMenuTriggerStyle()}
+                        >
+                            Account
+                        </Link>
                     <ModeToggle />
                         <Link
                             to="/cart"

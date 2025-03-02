@@ -77,6 +77,26 @@ app.post('/orders', async (req, res) => {
     }
 });
 
+// Route to get a specific user by ID
+app.get('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const users = await fs.readFile('./data/users.json', 'utf8');
+        const allUsers = JSON.parse(users);
+        
+        const user = allUsers.find((user: { id: string }) => user.id === userId);
+        
+        if (!user) {
+            return void res.status(404).json({ message: 'User not found.' });
+        }
+        
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Failed to load user data.' });
+    }
+});
+
 // Handle unknown routes
 app.use((req, res) => {
     if (req.method === 'OPTIONS') {
