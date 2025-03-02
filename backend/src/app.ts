@@ -23,13 +23,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Route to get meals
-app.get('/meals', async (req, res) => {
+// Route to get products
+app.get('/products', async (req, res) => {
     try {
-        const meals = await fs.readFile('./data/available-meals.json', 'utf8');
-        res.json(JSON.parse(meals));
+        const products = await fs.readFile('./data/available-products.json', 'utf8');
+        res.json(JSON.parse(products));
     } catch (error) {
-        res.status(500).json({ message: 'Failed to load meals.' });
+        res.status(500).json({ message: 'Failed to load Products.' });
     }
 });
 
