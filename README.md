@@ -22,8 +22,8 @@ A full-stack web application built with React + TypeScript frontend and Express.
 
 ### Prerequisites
 
--   Node.js >= 14
--   npm or yarn
+-   Node.js >= 20.17
+-   npm >= 10.9.0
 -   PostgreSQL
 
 ### Installation
