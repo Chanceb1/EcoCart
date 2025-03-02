@@ -90,6 +90,12 @@ export default function Header() {
                 </NavigationMenu>
 
                 <div className="flex items-center gap-2">
+                        <Link
+                            to="/account"
+                            className={navigationMenuTriggerStyle()}
+                        >
+                            Account
+                        </Link>
                     <ModeToggle />
                         <Link
                             to="/cart"

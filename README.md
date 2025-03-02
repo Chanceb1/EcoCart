@@ -50,16 +50,10 @@ npm install
 
 ## Running the Application
 
-1. build the backend server (in backend directory):
+1. Start the backend dev server (in backend directory):
 
 ```
-npm build
-```
-
-2. Start the backend server (in backend directory):
-
-```
-npm start
+npm run dev
 ```
 
 Server will run at http://localhost:5000
