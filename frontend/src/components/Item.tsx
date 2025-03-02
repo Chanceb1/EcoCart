@@ -23,18 +23,20 @@ export default function Item({ item }: ItemProps): JSX.Element {
     }
 
     return (
-        <li className="bg-white rounded-lg shadow-md overflow-hidden">
-            <article className="bg-white rounded-lg shadow-md overflow-hidden">
+        <li className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <article className="bg-white rounded-lg overflow-hidden min-h-full">
                 <img src={`http://localhost:5000/${item.image}`} alt={item.name} className="w-full h-48 object-cover" />
-                <div className="p-4">
+                <div className="p-3">
                     <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
-                    <p className="text-green-600 font-bold mb-2">
-                        {currencyFormatter.format(item.price)}
-                    </p>
-                    <p className="text-gray-700">{item.description}</p>
-                </div>
-                <div className="p-4 text-center">
+                    <div className="grid grid-cols-6 gap-1 justify-center items-center">
+                        <p className="text-sm col-span-4 text-gray-700 text-right max-h-20 text-ellipsis overflow-clip">{item.description}</p>
+                        <p className="text-2xl col-span-2 text-green-600 font-bold mb-2">
+                            {currencyFormatter.format(item.price)}
+                        </p>
+                    </div>
+                    <div className="p-4 text-center">
                     <Button onClick={handleAddItemToCart} textOnly={true} className="add-to-cart-button">Add to Cart</Button>
+                    </div>
                 </div>
             </article>
         </li>
