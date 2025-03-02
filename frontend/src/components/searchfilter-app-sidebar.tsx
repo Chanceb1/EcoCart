@@ -1,8 +1,7 @@
 import * as React from "react"
 import { ChevronRight } from "lucide-react"
 
-import { SearchForm } from "@/components/search-form"
-import { VersionSwitcher } from "@/components/searchfilter-version-switcher"
+import { SearchForm } from "@/components/searchfilter-search-form"
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,146 +19,82 @@ import {
   SidebarMenuItem,
   SidebarRail
 } from "@/components/ui/searchfilter-sidebar"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 // This is sample data.
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Category",
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          id: "electronics",
+          label: "Electronics",
         },
         {
-          title: "Project Structure",
-          url: "#",
+          id: "consumable",
+          label: "Consumable",
         },
+        {
+          id: "storage",
+          label: "Storage",
+        }
       ],
     },
     {
-      title: "Building Your Application",
+      title: "Recycle Method",
       url: "#",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          id: "paper",
+          label: "Paper",
         },
         {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
+          id: "metal",
+          label: "Metal",
         },
         {
-          title: "Rendering",
-          url: "#",
+          id: "compostable",
+          label: "Compostable",
         },
         {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
+          id: "glass",
+          label: "Glass",
+        }
       ],
     },
     {
-      title: "API Reference",
+      title: "Certificates",
       url: "#",
       items: [
         {
-          title: "Components",
-          url: "#",
+          id: "cert1",
+          label: "Certificate 1",
         },
         {
-          title: "File Conventions",
-          url: "#",
+          id: "cert2",
+          label: "Certificate 2",
         },
         {
-          title: "Functions",
-          url: "#",
+          id: "cert3",
+          label: "Certificate 3",
         },
         {
-          title: "next.config.js Options",
-          url: "#",
+          id: "cert4",
+          label: "Certificate 4",
         },
         {
-          title: "CLI",
-          url: "#",
+          id: "cert5",
+          label: "Certificate 5",
         },
         {
-          title: "Edge Runtime",
-          url: "#",
+          id: "cert6",
+          label: "Certificate 6",
         },
       ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
-        },
-      ],
-    },
+    }
   ],
 }
 
@@ -180,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Collapsible
             key={item.title}
             title={item.title}
-            defaultOpen
+            defaultOpen={false}
             className="group/collapsible"
           >
             <SidebarGroup>
@@ -195,13 +130,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarGroupLabel>
               <CollapsibleContent>
                 <SidebarGroupContent>
-                  <SidebarMenu>
+                  <SidebarMenu className="p-2">
                     {item.items.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      <label for={item.id}> 
+                        <SidebarMenuItem key={item.id} className="border-2 flex gap-2 overflow-hidden 
+                          rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding] 
+                          hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 
+                          active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none 
+                          disabled:opacity-50 text-ellipsis overflow-clip"
+                        > 
+                            <input type="checkbox" id={item.id} name={item.id} value={item.id} />
+                            {item.label}
+                        </SidebarMenuItem>
+                        </label>
                     ))}
                   </SidebarMenu>
                 </SidebarGroupContent>
@@ -209,6 +150,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroup>
           </Collapsible>
         ))}
+        <div className="p-2 border-t-2 border-b">
+          <Button
+            data-sidebar="trigger"
+            data-slot="sidebar-trigger"
+            variant="outline"
+            size="icon"
+            className={cn("bg-green-600 hover:bg-green-700 font-bold w-2/5 gap-2 p-2")}
+          >
+            Filter
+          </Button>
+        </div>
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
