@@ -12,7 +12,7 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
     navigationMenuTriggerStyle
-} from '@/components/UI/navigation-menu';
+} from '@/components/ui/navigation-menu';
 
 import { ModeToggle } from './Theme/ModeToggle';
 

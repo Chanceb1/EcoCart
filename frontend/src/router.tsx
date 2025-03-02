@@ -31,14 +31,13 @@ export const router = createBrowserRouter([
                 element: <CartPage />
             },
             {
+                path: 'checkout',
+                element: <CheckoutPage />,
+            },
+            {
                 path: 'contact',
                 element: <ContactPage />
             }
         ]
-    },
-    {
-        path: 'checkout',
-        element: <CheckoutPage />,
-        errorElement: <ErrorPage />
     }
 ]);

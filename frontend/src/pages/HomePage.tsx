@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/UI/Button';
+import { Button } from '@/components/ui/Button';
 import { Link } from 'react-router-dom';
 import EcoIcon from '@/assets/eco-friendly-icon.svg';
 

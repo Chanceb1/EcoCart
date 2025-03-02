@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/UI/Button';
+import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CartItem {
     id: number;
@@ -27,9 +28,9 @@ export default function CartPage() {
                 .map(item =>
                     item.id === id
                         ? {
-                              ...item,
-                              quantity: Math.max(1, item.quantity + delta)
-                          }
+                            ...item,
+                            quantity: Math.max(1, item.quantity + delta)
+                        }
                         : item
                 )
                 .filter(item => item.quantity > 0)
@@ -99,7 +100,9 @@ export default function CartPage() {
                 <hr className="mt-6 mb-2" />
                 <div className="flex justify-between items-center">
                     <Button disabled={!cart.length} className="mt-4 px-8">
-                        Proceed to Checkout
+                        <Link to="/checkout">
+                            Proceed to Checkout
+                        </Link>
                     </Button>
                     <p className="mt-4 font-bold">Total: ${totalPrice}</p>
                 </div>
