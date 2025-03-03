@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "main": "dist/app.js",
     "scripts": {
+        "dev": "nodemon --exec ts-node src/app.ts",
         "build": "tsc",
-        "start": "node dist/app.js",
-        "dev": "nodemon --watch 'src/app.ts' --exec 'ts-node' src/app.ts"
+        "start": "node dist/app.js"
     },
     "dependencies": {
         "body-parser": "^1.20.3",
@@ -16,9 +16,9 @@
         "@types/body-parser": "^1.19.5",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
-        "@types/node": "^22.10.7",
+        "@types/node": "^22.13.8",
         "nodemon": "^3.1.9",
         "ts-node": "^10.9.2",
-        "typescript": "^5.7.3"
+        "typescript": "^5.8.2"
     }
 }

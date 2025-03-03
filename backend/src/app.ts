@@ -23,13 +23,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Route to get meals
-app.get('/meals', async (req, res) => {
+// Route to get products
+app.get('/products', async (req, res) => {
     try {
-        const meals = await fs.readFile('./data/available-meals.json', 'utf8');
-        res.json(JSON.parse(meals));
+        const products = await fs.readFile('./data/available-products.json', 'utf8');
+        res.json(JSON.parse(products));
     } catch (error) {
-        res.status(500).json({ message: 'Failed to load meals.' });
+        res.status(500).json({ message: 'Failed to load Products.' });
     }
 });
 
@@ -74,6 +74,26 @@ app.post('/orders', async (req, res) => {
         res.status(201).json({ message: 'Order created!' });
     } catch (error) {
         res.status(500).json({ message: 'Failed to create order.' });
+    }
+});
+
+// Route to get a specific user by ID
+app.get('/user/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const users = await fs.readFile('./data/users.json', 'utf8');
+        const allUsers = JSON.parse(users);
+        
+        const user = allUsers.find((user: { id: string }) => user.id === userId);
+        
+        if (!user) {
+            return void res.status(404).json({ message: 'User not found.' });
+        }
+        
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Failed to load user data.' });
     }
 });
 

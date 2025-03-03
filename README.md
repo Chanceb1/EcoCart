@@ -6,8 +6,9 @@ A full-stack web application built with React + TypeScript frontend and Express.
 
 ### Frontend
 
--   React 18
--   TypeScript
+-   React 19
+-   TypeScript + SWC
+-   TailwindCSS
 -   Vite
 -   Context API for state management
 
@@ -49,10 +50,10 @@ npm install
 
 ## Running the Application
 
-1. Start the backend server (in backend directory):
+1. Start the backend dev server (in backend directory):
 
 ```
-npm start
+npm run dev
 ```
 
 Server will run at http://localhost:5000
