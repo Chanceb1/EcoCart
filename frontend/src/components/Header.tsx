@@ -86,6 +86,16 @@ export default function Header() {
                                 About
                             </Link>
                         </NavigationMenuItem>
+
+                        <NavigationMenuItem>
+                            <Link
+                                to="/seller-dashboard"
+                                className={navigationMenuTriggerStyle()}
+                            >
+                                Seller Dashboard
+                            </Link>
+                        </NavigationMenuItem>
+
                     </NavigationMenuList>
                 </NavigationMenu>
 

@@ -8,6 +8,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import ErrorPage from './pages/ErrorPage';
 import ContactPage from './pages/ContactPage';
 import UserAccountPage from './pages/userAccountPage';
+import SellerDashboard from './pages/SellerDashboard';
 
 export const router = createBrowserRouter([
     {
@@ -42,7 +43,12 @@ export const router = createBrowserRouter([
             {
                 path: 'contact',
                 element: <ContactPage />
+            },
+            {
+                path: 'seller-dashboard',
+                element: <SellerDashboard />
             }
+            
         ]
     }
 ]);

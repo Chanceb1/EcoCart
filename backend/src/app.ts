@@ -26,7 +26,10 @@ app.use(express.static('public'));
 // Route to get products
 app.get('/products', async (req, res) => {
     try {
-        const products = await fs.readFile('./data/available-products.json', 'utf8');
+        const products = await fs.readFile(
+            './data/available-products.json',
+            'utf8'
+        );
         res.json(JSON.parse(products));
     } catch (error) {
         res.status(500).json({ message: 'Failed to load Products.' });
@@ -83,13 +86,15 @@ app.get('/user/:id', async (req, res) => {
         const userId = req.params.id;
         const users = await fs.readFile('./data/users.json', 'utf8');
         const allUsers = JSON.parse(users);
-        
-        const user = allUsers.find((user: { id: string }) => user.id === userId);
-        
+
+        const user = allUsers.find(
+            (user: { id: string }) => user.id === userId
+        );
+
         if (!user) {
             return void res.status(404).json({ message: 'User not found.' });
         }
-        
+
         res.json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
@@ -107,7 +112,8 @@ app.use((req, res) => {
 });
 
 // Start server
-const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+const HOST = process.env.HOST || 'localhost';
+const PORT = Number(process.env.PORT) || 5000;
+app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
 });
