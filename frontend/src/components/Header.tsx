@@ -55,6 +55,14 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export default function Header() {
+    // Add this custom function inside the component
+    const transparentNavigationMenuTriggerStyle = () => {
+        return cn(
+            "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+            "bg-transparent hover:bg-accent/50"
+        );
+    };
+
     return (
         <div className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-2 bg-background/80 border-b backdrop-blur-sm">
             <div className="container mx-auto flex justify-between items-center">
@@ -63,7 +71,7 @@ export default function Header() {
                         <NavigationMenuItem>
                             <Link
                                 to="/"
-                                className={navigationMenuTriggerStyle()}
+                                className={transparentNavigationMenuTriggerStyle()}
                             >
                                 Home
                             </Link>
@@ -72,7 +80,7 @@ export default function Header() {
                         <NavigationMenuItem>
                             <Link
                                 to="/products"
-                                className={navigationMenuTriggerStyle()}
+                                className={transparentNavigationMenuTriggerStyle()}
                             >
                                 Products
                             </Link>
@@ -81,7 +89,7 @@ export default function Header() {
                         <NavigationMenuItem>
                             <Link
                                 to="/about"
-                                className={navigationMenuTriggerStyle()}
+                                className={transparentNavigationMenuTriggerStyle()}
                             >
                                 About
                             </Link>
@@ -90,7 +98,7 @@ export default function Header() {
                         <NavigationMenuItem>
                             <Link
                                 to="/seller-dashboard"
-                                className={navigationMenuTriggerStyle()}
+                                className={transparentNavigationMenuTriggerStyle()}
                             >
                                 Seller Dashboard
                             </Link>
@@ -100,19 +108,19 @@ export default function Header() {
                 </NavigationMenu>
 
                 <div className="flex items-center gap-2">
-                        <Link
-                            to="/account"
-                            className={navigationMenuTriggerStyle()}
-                        >
-                            Account
-                        </Link>
+                    <Link
+                        to="/account"
+                        className={transparentNavigationMenuTriggerStyle()}
+                    >
+                        Account
+                    </Link>
                     <ModeToggle />
-                        <Link
-                            to="/cart"
-                            className={navigationMenuTriggerStyle()}
-                        >
-                            Cart
-                        </Link>
+                    <Link
+                        to="/cart"
+                        className={transparentNavigationMenuTriggerStyle()}
+                    >
+                        Cart
+                    </Link>
                 </div>
             </div>
         </div>
