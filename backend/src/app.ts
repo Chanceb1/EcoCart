@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import { promises as fs } from 'fs';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './swagger';
 
 interface Order {
     items: {
@@ -23,7 +25,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+
+// Swagger documentation route
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
 // Route to get products
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Returns all products
+ *     responses:
+ *       200:
+ *         description: List of products
+ */
 app.get('/products', async (req, res) => {
     try {
         const products = await fs.readFile(
@@ -36,7 +52,30 @@ app.get('/products', async (req, res) => {
     }
 });
 
+
 // Route to get orders
+/**
+ * @swagger
+ * /orders:
+ *   post:
+ *     summary: Create a new order
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               order:
+ *                 type: object
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ *       400:
+ *         description: Invalid order data
+ *       500:
+ *         description: Server error
+ */
 app.post('/orders', async (req, res) => {
     try {
         const orderData: Order = req.body.order;
@@ -80,7 +119,26 @@ app.post('/orders', async (req, res) => {
     }
 });
 
+
 // Route to get a specific user by ID
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the user to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User details
+ *       404:
+ *         description: User not found
+ */
 app.get('/user/:id', async (req, res) => {
     try {
         const userId = req.params.id;
@@ -102,7 +160,17 @@ app.get('/user/:id', async (req, res) => {
     }
 });
 
+
 // Handle unknown routes
+/**
+ * @swagger
+ * /unknown:
+ *   get:
+ *     summary: Unknown route
+ *     responses:
+ *       404:
+ *         description: Not found
+ */
 app.use((req, res) => {
     if (req.method === 'OPTIONS') {
         res.sendStatus(200);
@@ -110,6 +178,7 @@ app.use((req, res) => {
 
     res.status(404).json({ message: 'Not found' });
 });
+
 
 // Start server
 const HOST = process.env.HOST || 'localhost';
