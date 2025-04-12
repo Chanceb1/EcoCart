@@ -1,6 +1,4 @@
 import express, { Request, Response } from 'express';
-import { promises as fs } from 'fs';
-import sequelize from '../database';
 import { ProductSchema, Product } from '../models/productModel';
 
 const productRouter = express.Router();
