@@ -22,11 +22,11 @@ app.use(express.static('public'));
 // Swagger documentation route
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+
 // include api routers
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
-
 
 
  // error handling middleware

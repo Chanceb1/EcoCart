@@ -1,33 +1,29 @@
-// this file sets up the postgress database connection
+// this file sets up the database connection
+import { Sequelize, DataTypes } from 'sequelize';
 
-import { PrismaClient } from '@prisma/client';
-import { env } from './env';
-
-const prisma = new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: 'database.sqlite', // or the path you configured
+  logging: false, // Disable logging for cleaner output
 });
 
-const connectDB = async () => {
+const modelDefiners = [
+    require('./models/product.js'),
+];
+
+// We define all models according to the paths we have
+for (const modelDefiner of modelDefiners) {
+    modelDefiner(sequelize, DataTypes)
+}
+
+(async () => {
     try {
-        await prisma.$connect();
-        console.log('Connected to the database successfully');
+      await sequelize.sync({ force: true }); // Use force: true with caution in production
+      console.log('Database synced successfully.');
+    //   await sequelize.sync({ force: true })
     } catch (error) {
-        console.error('Error connecting to the database:', error);
+      console.error('Unable to sync the database:', error);
     }
-};
-
-const disconnectDB = async () => {
-    try {
-        await prisma.$disconnect();
-        console.log('Disconnected from the database successfully');
-    } catch (error) {
-        console.error('Error disconnecting from the database:', error);
-    }
-};
-
-const main = async () => {
-    await connectDB();
-    // Add your database operations here
-};
-    await disconnectDB();
-
+  })();
+  
+  export default sequelize; 

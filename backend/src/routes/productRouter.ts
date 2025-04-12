@@ -1,17 +1,9 @@
 import express, { Request, Response } from 'express';
 import { promises as fs } from 'fs';
-
+import sequelize from '../database';
+import { ProductSchema, Product } from '../models/productModel';
 
 const productRouter = express.Router();
-
-// Interface for product type
-interface Product {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    imageUrl: string;
-}
 
 
 // Route to get products
@@ -27,15 +19,13 @@ interface Product {
  *       404:
  *         description: Products not found
  */
-productRouter.get('/products', async (req, res) => {
+productRouter.get('/products', async (req: Request, res: Response): Promise<any> => {
     try {
-        const products = await fs.readFile(
-            './data/available-products.json',
-            'utf8'
-        );
-        res.json(JSON.parse(products));
+        const products = await Product.findAll();
+        res.status(200).json(products);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to load Products.' });
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Failed to retrieve products' });
     }
 });
 
@@ -53,33 +43,31 @@ productRouter.get('/products', async (req, res) => {
  *         required: true
  *         description: ID of the product to retrieve
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Product details
  *       404:
  *         description: Product not found
+ *       500:
+ *         description: Failed to retrieve product
  */
 productRouter.get('/products/:id', async (req: Request, res: Response): Promise<any> => {
     try {
         const productId = req.params.id;
-        const products = await fs.readFile(
-            './data/available-products.json',
-            'utf8'
-        );
-        const allProducts: Product[] = JSON.parse(products);
-        const product = allProducts.find((p) => p.id === productId);
+        const product = await Product.findByPk(productId);
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found.' });
+            return res.status(404).json({ message: 'Product not found' });
         }
 
-        res.json(product);
+        res.status(200).json(product);
     } catch (error) {
         console.error('Error fetching product:', error);
-        res.status(500).json({ message: 'Failed to load product.' });
+        res.status(500).json({ message: 'Failed to retrieve product' });
     }
 });
+
 
 
 // Route to create a new product
@@ -124,29 +112,17 @@ productRouter.post('/products', async (req: Request, res: Response): Promise<any
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        const newProduct: Product = {
-            id: Math.random().toString(36).substring(7),
+        const newProduct = await Product.create({
             name,
             description,
             price,
             imageUrl,
-        };
+        });
 
-        const products = await fs.readFile(
-            './data/available-products.json',
-            'utf8'
-        );
-        const allProducts = JSON.parse(products);
-        allProducts.push(newProduct);
-
-        await fs.writeFile(
-            './data/available-products.json',
-            JSON.stringify(allProducts, null, 2)
-        );
         res.status(201).json(newProduct);
     } catch (error) {
         console.error('Error creating product:', error);
-        res.status(500).json({ message: 'Failed to create product.' });
+        res.status(500).json({ message: 'Failed to create product' });
     }
 });
 
@@ -157,20 +133,33 @@ productRouter.post('/products', async (req: Request, res: Response): Promise<any
  * /api/products/{id}:
  *   put:
  *     summary: Updates a product by ID
- *     tags: [Products]  
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: ID of the product to update
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Product'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Product's name
+ *               description:
+ *                 type: string
+ *                 description: Product's description
+ *               price:
+ *                 type: number
+ *                 description: Product's price
+ *               imageUrl:
+ *                 type: string
+ *                 description: Product's image URL
  *     responses:
  *       200:
  *         description: Product updated successfully
@@ -179,40 +168,28 @@ productRouter.post('/products', async (req: Request, res: Response): Promise<any
  *       500:
  *         description: Failed to update product
  */
-productRouter.put('/products/:id', async (req, res): Promise<any> => {
+productRouter.put('/products/:id', async (req: Request, res: Response): Promise<any> => {
     try {
         const productId = req.params.id;
-        const updatedProductData: Product = req.body;
+        const { name, description, price, imageUrl } = req.body;
 
-        const products = await fs.readFile(
-            './data/available-products.json',
-            'utf8'
-        );
-        const allProducts: Product[] = JSON.parse(products);
+        const product = await Product.findByPk(productId);
 
-        const productIndex = allProducts.findIndex((p) => p.id === productId);
-
-        if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found.' });
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
         }
 
-        allProducts[productIndex] = {
-            ...allProducts[productIndex],
-            ...updatedProductData
-        };
-
-        await fs.writeFile(
-            './data/available-products.json',
-            JSON.stringify(allProducts, null, 2)
-        );
-
-        res.json({
-            message: 'Product updated successfully.',
-            product: allProducts[productIndex]
+        await product.update({
+            name,
+            description,
+            price,
+            imageUrl,
         });
+
+        res.status(200).json({ message: 'Product updated successfully', product });
     } catch (error) {
         console.error('Error updating product:', error);
-        res.status(500).json({ message: 'Failed to update product.' });
+        res.status(500).json({ message: 'Failed to update product' });
     }
 });
 
@@ -230,7 +207,7 @@ productRouter.put('/products/:id', async (req, res): Promise<any> => {
  *         required: true
  *         description: ID of the product to delete
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Product deleted successfully
@@ -239,33 +216,21 @@ productRouter.put('/products/:id', async (req, res): Promise<any> => {
  *       500:
  *         description: Failed to delete product
  */
-productRouter.delete('/products/:id', async (req, res): Promise<any> => {
+productRouter.delete('/products/:id', async (req: Request, res: Response): Promise<any> => {
     try {
         const productId = req.params.id;
+        const product = await Product.findByPk(productId);
 
-        const products = await fs.readFile(
-            './data/available-products.json',
-            'utf8'
-        );
-        const allProducts: Product[] = JSON.parse(products);
-
-        const productIndex = allProducts.findIndex((p) => p.id === productId);
-
-        if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found.' });
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
         }
 
-        allProducts.splice(productIndex, 1);
+        await product.destroy();
 
-        await fs.writeFile(
-            './data/available-products.json',
-            JSON.stringify(allProducts, null, 2)
-        );
-
-        res.status(200).json({ message: 'Product deleted successfully.' });
+        res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
         console.error('Error deleting product:', error);
-        res.status(500).json({ message: 'Failed to delete product.' });
+        res.status(500).json({ message: 'Failed to delete product' });
     }
 });
 
