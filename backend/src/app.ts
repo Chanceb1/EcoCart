@@ -8,7 +8,7 @@ import userRouter from './routes/userRouter';
 import productRouter from './routes/productRouter';
 import orderRouter from './routes/ordersRouter';
 
-// use : Promise<any> to avoid type errors with async/await
+// use : Promise<void> to avoid type errors with async/await
 
 const app = express();
 

@@ -62,18 +62,34 @@ productRouter.get('/', async (req: Request, res: Response): Promise<void> => {
  *     responses:
  *       200:
  *         description: Product details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *                 imageUrl:
+ *                   type: string
  *       404:
  *         description: Product not found
  *       500:
  *         description: Failed to retrieve product
  */
-productRouter.get('/products/:id', async (req: Request, res: Response): Promise<any> => {
+productRouter.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const productId = req.params.id;
         const product = await Product.findByPk(productId);
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+            res.status(404).json({ message: 'Product not found' });
+            return;
         }
 
         res.status(200).json(product);
@@ -119,12 +135,13 @@ productRouter.get('/products/:id', async (req: Request, res: Response): Promise<
  *       500:
  *         description: Failed to create product
  */
-productRouter.post('/products', async (req: Request, res: Response): Promise<any> => {
+productRouter.post('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, description, price, imageUrl } = req.body;
 
         if (!name || !description || !price || !imageUrl) {
-            return res.status(400).json({ message: 'Missing required fields' });
+            res.status(400).json({ message: 'Missing required fields' });
+            return;
         }
 
         const newProduct = await Product.create({
@@ -183,17 +200,25 @@ productRouter.post('/products', async (req: Request, res: Response): Promise<any
  *       500:
  *         description: Failed to update product
  */
-productRouter.put('/products/:id', async (req: Request, res: Response): Promise<any> => {
+productRouter.put('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const productId = req.params.id;
         const { name, description, price, imageUrl } = req.body;
 
+        // Validate input
+        if (!name || !description || !price || !imageUrl) {
+            res.status(400).json({ message: 'Missing required fields' });
+            return;
+        }
+
         const product = await Product.findByPk(productId);
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+            res.status(404).json({ message: 'Product not found' });
+            return;
         }
 
+        // Update the product
         await product.update({
             name,
             description,
@@ -201,13 +226,15 @@ productRouter.put('/products/:id', async (req: Request, res: Response): Promise<
             imageUrl,
         });
 
-        res.status(200).json({ message: 'Product updated successfully', product });
+        res.status(200).json({ 
+            message: 'Product updated successfully', 
+            product 
+        });
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).json({ message: 'Failed to update product' });
     }
 });
-
 
 // Route to delete a product by ID
 /**
@@ -231,18 +258,21 @@ productRouter.put('/products/:id', async (req: Request, res: Response): Promise<
  *       500:
  *         description: Failed to delete product
  */
-productRouter.delete('/products/:id', async (req: Request, res: Response): Promise<any> => {
+productRouter.delete('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const productId = req.params.id;
         const product = await Product.findByPk(productId);
 
         if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
+            res.status(404).json({ message: 'Product not found' });
+            return;
         }
 
         await product.destroy();
-
-        res.status(200).json({ message: 'Product deleted successfully' });
+        res.status(200).json({ 
+            message: 'Product deleted successfully',
+            deletedProductId: productId 
+        });
     } catch (error) {
         console.error('Error deleting product:', error);
         res.status(500).json({ message: 'Failed to delete product' });
