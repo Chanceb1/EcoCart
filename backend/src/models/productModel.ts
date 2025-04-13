@@ -1,5 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
+import { Order } from './orderModel';
+import { User } from './userModel';
 
 // Define the Product schema
 // This interface defines the structure of the Product model
@@ -55,6 +57,13 @@ Product.init(
         modelName: 'Product'
     }
 );
+
+// define associations
+Product.belongsToMany(Order, {
+    through: 'OrderProducts',
+    as: 'productOrders',
+    foreignKey: 'productId'
+});
 
 
 export default Product;

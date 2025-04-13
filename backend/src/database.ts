@@ -1,21 +1,67 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import path from 'path';
+import { User } from './models/userModel';
 import { Product } from './models/productModel';
-// import { User } from './models/userModel';
-// import { Order } from './models/orderModel';
+import { Order } from './models/orderModel';
 
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: path.join(__dirname, 'database.sqlite'),
+    storage: path.join(__dirname, 'ecocart.sqlite'),
     logging: false,
 });
 
+
+// Initialize database
+export const initDatabase = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Database connection has been established successfully.');
+
+        // Sync all models
+        await sequelize.sync({ force: true });
+        console.log('Database synced successfully');
+
+        const userCount = await User.count();
+        const productCount = await Product.count();
+
+        if (userCount === 0 && productCount === 0) {
+            await seedDatabase();
+        } else {
+            console.log(`Database already contains ${userCount} users and ${productCount} products`);
+        }
+    } catch (error) {
+        console.error('Unable to initialize database:', error);
+        process.exit(1);
+    }
+};
 
 // Seed data function
 const seedDatabase = async () => {
     try {
         console.log('Starting to seed database...');
+
+        // Sample users
+        const sampleUsers = [
+            {
+                firstName: 'chance',
+                lastName: 'b',
+                email: 'cb@email.com',
+                password: '1234',
+                address: '123 Main St, City, State 12345',
+                role: "user" as const
+            },
+            {
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@example.com',
+                password: '1234',
+                address: '456 Admin St, City, State 12345',
+                role: "admin" as const
+            }
+        ];
+
+        // sample products
         const sampleProducts = [
             {
                 name: 'Eco-Friendly Water Bottle',
@@ -37,39 +83,18 @@ const seedDatabase = async () => {
             }
         ];
 
+        // Create users first
+        await User.bulkCreate(sampleUsers);
+        console.log('Sample users created successfully');
+
+        // Create products
         await Product.bulkCreate(sampleProducts);
+        console.log('Sample products created successfully');
+
         console.log('Database seeded successfully');
     } catch (error) {
         console.error('Error seeding database:', error);
     }
 };
-
-// Initialize database
-const initDatabase = async () => {
-    try {
-        // Test the connection
-        await sequelize.authenticate();
-        console.log('Database connection has been established successfully.');
-
-        // Sync all models
-        await sequelize.sync({ force: true });
-        console.log('Database synced successfully');
-
-        // Check if products table is empty
-        const count = await Product.count();
-        if (count === 0) {
-            // Seed the database
-            await seedDatabase();
-        } else {
-            console.log(`Database already contains ${count} products`);
-        }
-    } catch (error) {
-        console.error('Unable to initialize database:', error);
-        process.exit(1); // Exit if database initialization fails
-    }
-};
-
-// Run initialization
-initDatabase();
 
 export { sequelize };

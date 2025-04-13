@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
 import { Product } from './productModel';
+import { User } from './userModel';
 
 // Define the Order schema
 export interface OrderSchema {
@@ -72,17 +73,16 @@ Order.init(
 );
 
 // Define associations
-Order.belongsToMany(Product, {
-    through: 'OrderProducts',
-    as: 'products',
-    foreignKey: 'orderId'
+Order.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user'
 });
 
-Product.belongsToMany(Order, {
-    through: 'OrderProducts',
-    as: 'orders',
-    foreignKey: 'productId'
-});
+// Order.belongsToMany(Product, {
+//     through: 'OrderProducts',
+//     as: 'products',
+//     foreignKey: 'orderId'
+// });
 
 
 export default Order;
