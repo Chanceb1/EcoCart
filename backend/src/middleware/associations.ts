@@ -14,5 +14,11 @@ export const setupAssociations = () => {
         as: 'orders'
     });
 
+    Product.belongsToMany(Order, {
+        through: 'OrderProducts',
+        as: 'productOrders',
+        foreignKey: 'productId'
+    });
+
     // Add any other associations here
 };
