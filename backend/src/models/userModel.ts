@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
-import { Order } from './orderModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -14,7 +13,6 @@ export interface UserSchema {
     address?: string;
     role: 'user' | 'admin';
 }
-
 
 // Define the User model
 export class User extends Model<UserSchema> implements UserSchema {
@@ -47,37 +45,37 @@ User.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         firstName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
             validate: {
-                isEmail: true,
-            },
+                isEmail: true
+            }
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         address: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
         role: {
             type: DataTypes.ENUM('user', 'admin'),
             allowNull: false,
-            defaultValue: 'user',
-        },
+            defaultValue: 'user'
+        }
     },
     {
         sequelize,
@@ -90,16 +88,9 @@ User.init(
                     const salt = await bcrypt.genSalt(10);
                     user.password = await bcrypt.hash(user.password, salt);
                 }
-            },
-        },
+            }
+        }
     }
 );
-
-// Define associations with Order model
-User.hasMany(Order, {
-    sourceKey: 'id',
-    foreignKey: 'userId',
-    as: 'userOrders',
-});
 
 export default User;

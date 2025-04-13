@@ -10,9 +10,7 @@ const sequelize = new Sequelize({
 // Import models
 import { User } from './models/userModel';
 import { Product } from './models/productModel';
-import { Order } from './models/orderModel';
 import { setupAssociations } from './middleware/associations';
-
 
 // Initialize database
 export const initDatabase = async () => {
@@ -33,14 +31,15 @@ export const initDatabase = async () => {
         if (userCount === 0 && productCount === 0) {
             await seedDatabase();
         } else {
-            console.log(`Database already contains ${userCount} users and ${productCount} products`);
+            console.log(
+                `Database already contains ${userCount} users and ${productCount} products`
+            );
         }
     } catch (error) {
         console.error('Unable to initialize database:', error);
         process.exit(1);
     }
 };
-
 
 // Seed data function
 const seedDatabase = async () => {
@@ -55,7 +54,7 @@ const seedDatabase = async () => {
                 email: 'cb@email.com',
                 password: '1234',
                 address: '123 Main St, City, State 12345',
-                role: "user" as const
+                role: 'user' as const
             },
             {
                 firstName: 'Admin',
@@ -63,7 +62,7 @@ const seedDatabase = async () => {
                 email: 'admin@example.com',
                 password: '1234',
                 address: '456 Admin St, City, State 12345',
-                role: "admin" as const
+                role: 'admin' as const
             }
         ];
 

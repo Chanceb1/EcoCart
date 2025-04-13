@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
-import { Product } from './productModel';
 import { User } from './userModel';
 
 // Define the Order schema
@@ -36,33 +35,33 @@ Order.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: User,
-                key: 'id',
-            },
+                key: 'id'
+            }
         },
         totalAmount: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false,
+            allowNull: false
         },
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
             allowNull: false,
-            defaultValue: 'pending',
+            defaultValue: 'pending'
         },
         orderDate: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: DataTypes.NOW,
+            defaultValue: DataTypes.NOW
         },
         shippingAddress: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         }
     },
     {
@@ -73,9 +72,16 @@ Order.init(
 );
 
 // Define associations after both models are initialized
-// Order.belongsTo(User, {
-//     foreignKey: 'userId',
-//     as: 'user'
-// });
+
+User.hasMany(Order, {
+    sourceKey: 'id',
+    foreignKey: 'userId',
+    as: 'userOrders'
+});
+
+Order.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'orderer'
+});
 
 export default Order;
