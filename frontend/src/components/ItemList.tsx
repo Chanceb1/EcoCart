@@ -4,23 +4,30 @@ import useHttp from '../Hooks/useHttp';
 import Error from './Error';
 
 interface Item {
-    id: string;
+    id: number;  // Changed from string to number
     name: string;
     price: number;
     description: string;
-    image: string;
+    imageUrl: string;  // Changed from image to imageUrl to match backend
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
-const requestConfig = {};
+const requestConfig = {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+};
 
 export default function ItemList(): JSX.Element {
     const {
         data: loadedItems,
         isLoading,
         error
-    } = useHttp<Item[]>(apiBaseUrl + '/products', requestConfig, []);
+    } = useHttp<Item[]>(apiBaseUrl + '/api/products', requestConfig, []);
 
     if (isLoading) {
         return (
@@ -33,14 +40,25 @@ export default function ItemList(): JSX.Element {
         );
     }
 
-    if (error) {
-        return <Error title="failed to fetch Products" message={error} />;
+    // Add check for empty products array
+    if (!loadedItems || loadedItems.length === 0) {
+        return (
+            <div className="text-center p-4">
+                <p className="text-gray-500">No products available.</p>
+            </div>
+        );
     }
 
     return (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {loadedItems?.map(item => (
-                <Item key={item.id} item={item} />
+            {loadedItems.map(item => (
+                <Item 
+                    key={item.id} 
+                    item={{
+                        ...item,
+                        image: item.imageUrl // Map imageUrl to image for Item component
+                    }} 
+                />
             ))}
         </ul>
     );
