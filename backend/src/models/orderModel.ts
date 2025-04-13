@@ -42,7 +42,7 @@ Order.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'users',
+                model: User,
                 key: 'id',
             },
         },
@@ -72,17 +72,10 @@ Order.init(
     }
 );
 
-// Define associations
-Order.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'user'
-});
-
-// Order.belongsToMany(Product, {
-//     through: 'OrderProducts',
-//     as: 'products',
-//     foreignKey: 'orderId'
+// Define associations after both models are initialized
+// Order.belongsTo(User, {
+//     foreignKey: 'userId',
+//     as: 'user'
 // });
-
 
 export default Order;

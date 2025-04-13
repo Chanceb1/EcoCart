@@ -1,9 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import path from 'path';
-import { User } from './models/userModel';
-import { Product } from './models/productModel';
-import { Order } from './models/orderModel';
-
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -11,12 +7,21 @@ const sequelize = new Sequelize({
     logging: false,
 });
 
+// Import models
+import { User } from './models/userModel';
+import { Product } from './models/productModel';
+import { Order } from './models/orderModel';
+import { setupAssociations } from './middleware/associations';
+
 
 // Initialize database
 export const initDatabase = async () => {
     try {
         await sequelize.authenticate();
         console.log('Database connection has been established successfully.');
+
+        // Setup associations before syncing
+        setupAssociations();
 
         // Sync all models
         await sequelize.sync({ force: true });
@@ -35,6 +40,7 @@ export const initDatabase = async () => {
         process.exit(1);
     }
 };
+
 
 // Seed data function
 const seedDatabase = async () => {
