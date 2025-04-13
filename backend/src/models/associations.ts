@@ -1,6 +1,6 @@
-import { User } from '../models/userModel';
-import { Order } from '../models/orderModel';
-import { Product } from '../models/productModel';
+import { User } from './userModel';
+import { Order } from './orderModel';
+import { Product } from './productModel';
 
 export const setupAssociations = () => {
     // Order associations
@@ -19,6 +19,4 @@ export const setupAssociations = () => {
         as: 'productOrders',
         foreignKey: 'productId'
     });
-
-    // Add any other associations here
 };

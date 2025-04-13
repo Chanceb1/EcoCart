@@ -10,7 +10,7 @@ const sequelize = new Sequelize({
 // Import models
 import { User } from './models/userModel';
 import { Product } from './models/productModel';
-import { setupAssociations } from './middleware/associations';
+import { setupAssociations } from './models/associations';
 
 // Initialize database
 export const initDatabase = async () => {
