@@ -1,7 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import path from 'path';
 import { Product } from './models/productModel';
-
 // import { User } from './models/userModel';
 // import { Order } from './models/orderModel';
 
@@ -12,38 +11,6 @@ const sequelize = new Sequelize({
     logging: false,
 });
 
-// Initialize models
-const models = {
-    Product: Product.init(
-        {
-            id: {
-                type: DataTypes.INTEGER,
-                autoIncrement: true,
-                primaryKey: true,
-            },
-            name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            description: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            price: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            imageUrl: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-        },
-        {
-            sequelize,
-            tableName: 'products',
-        }
-    ),
-};
 
 // Seed data function
 const seedDatabase = async () => {
@@ -70,7 +37,7 @@ const seedDatabase = async () => {
             }
         ];
 
-        await models.Product.bulkCreate(sampleProducts);
+        await Product.bulkCreate(sampleProducts);
         console.log('Database seeded successfully');
     } catch (error) {
         console.error('Error seeding database:', error);
@@ -89,7 +56,7 @@ const initDatabase = async () => {
         console.log('Database synced successfully');
 
         // Check if products table is empty
-        const count = await models.Product.count();
+        const count = await Product.count();
         if (count === 0) {
             // Seed the database
             await seedDatabase();
@@ -105,4 +72,4 @@ const initDatabase = async () => {
 // Run initialization
 initDatabase();
 
-export { sequelize, models };
+export { sequelize };

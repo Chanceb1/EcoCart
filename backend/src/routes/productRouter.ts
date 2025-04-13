@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
-import { ProductSchema, Product } from '../models/productModel';
+import Product from '../models/productModel';
 
 const productRouter = express.Router();
 
 
-// Route to get products
+
 /**
  * @swagger
  * /api/products:
@@ -14,10 +14,27 @@ const productRouter = express.Router();
  *     responses:
  *       200:
  *         description: List of products
- *       404:
- *         description: Products not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   imageUrl:
+ *                     type: string
+ *       500:
+ *         description: Failed to retrieve products
  */
-productRouter.get('/products', async (req: Request, res: Response): Promise<any> => {
+productRouter.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const products = await Product.findAll();
         res.status(200).json(products);

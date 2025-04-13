@@ -12,21 +12,7 @@ import orderRouter from './routes/ordersRouter';
 
 const app = express();
 
-// Initialize database connection
-(async () => {
-    try {
-      await sequelize.authenticate();
-      console.log('Database connection established successfully.');
-      
-      // Sync and seed database (this will run the code in database.ts)
-      await sequelize.sync({ force: true }); 
-      console.log('Database synced.');
-    } catch (error) {
-      console.error('Unable to connect to the database:', error);
-    }
-  })();
-
-// Cors Middleware
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
