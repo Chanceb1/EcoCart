@@ -22,28 +22,28 @@ A full-stack web application built with React + TypeScript frontend and Express.
 
 ### Prerequisites
 
--   Node.js >= 14
--   npm or yarn
+-   Node.js >= 20.17
+-   npm >= 10.9.0
 -   PostgreSQL
 
 ### Installation
 
 1. Clone the repository:
 
-```
+```bash
 git clone [repository-url]
 ```
 
 2. Install backend dependencies:
 
-```
+```bash
 cd backend
 npm install
 ```
 
 3. Install frontend dependencies:
 
-```
+```bash
 cd frontend
 npm install
 ```
@@ -52,7 +52,7 @@ npm install
 
 1. Start the backend dev server (in backend directory):
 
-```
+```bash
 npm run dev
 ```
 
@@ -61,7 +61,6 @@ Server will run at http://localhost:5000
 2. Start the frontend development server (in frontend directory):
 
 ```bash
-cd frontend
 npm run dev
 ```
 

@@ -13,7 +13,7 @@ export default function ProductsPage() {
         <div className="container mx-auto py-8 align-middle text-center">
             <SidebarProvider>
                 <AppSidebar />
-                <SidebarTrigger className="-ml-14 -mt-6" />
+                <SidebarTrigger className="-ml-0 -mt-6" />
                 <SidebarInset className="ml-4">
                     <h1 className="text-2xl font-bold mb-6">
                         Our Products

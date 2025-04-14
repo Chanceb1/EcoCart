@@ -4,8 +4,6 @@ const Footer = () => {
   return (
     <footer className="border-t bg-background text-foreground">
       <div className="container mx-auto text-center py-6">
-      <p className="text-foreground/80">&copy; {new Date().getFullYear()} EcoCart. All rights reserved.</p> 
-        <br/>
         <div className="mt-2 space-x-4">
           <Link
             to="/privacy" 
@@ -26,6 +24,8 @@ const Footer = () => {
             Contact Us
           </Link>
         </div>
+        <br />
+        <p className="text-foreground/80">&copy; {new Date().getFullYear()} EcoCart. All rights reserved.</p> 
       </div>
     </footer>
   );
