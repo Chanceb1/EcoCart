@@ -1,17 +1,18 @@
 import { ReactNode, createContext, useReducer } from 'react';
 
-type CartItem = {
-    id: string;
+export interface CartItem {
+    id: number;
     name: string;
     price: number;
     quantity: number;
-};
+}
 
 type CartContextType = {
     items: CartItem[];
     addItem: (item: CartItem) => void;
-    removeItem: (id: string) => void;
+    removeItem: (id: number) => void;
     clearCart: () => void;
+    updateQuantity: (id: number, delta: number) => void;
 };
 
 type CartContextProviderProps = {
@@ -22,10 +23,11 @@ export const CartContext = createContext<CartContextType>({
     items: [],
     addItem: item => {},
     removeItem: id => {},
-    clearCart: () => {}
+    clearCart: () => {},
+    updateQuantity: (id: number, delta: number) => {}
 });
 
-function cartReducer(state: any, action: any) {
+function cartReducer(state: { items: CartItem[] }, action: any) {
     if (action.type === 'ADD_ITEM') {
         const existingCartItemIndex = state.items.findIndex(
             (item: any) => item.id === action.item.id
@@ -79,18 +81,46 @@ function cartReducer(state: any, action: any) {
         return { ...state, items: [] };
     }
 
+    if (action.type === 'UPDATE_QUANTITY') {
+        return {
+            ...state,
+            items: state.items
+                .map(item =>
+                    item.id === action.id
+                        ? {
+                              ...item,
+                              quantity: Math.max(
+                                  1,
+                                  item.quantity + action.delta
+                              )
+                          }
+                        : item
+                )
+                .filter(item => item.quantity > 0)
+        };
+    }
+
     return state;
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-    const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
+    const [cart, dispatchCartAction] = useReducer<{ items: CartItem[] }, any>(
+        cartReducer,
+        {
+            items: []
+        }
+    );
 
     function addItem(item: CartItem) {
         dispatchCartAction({ type: 'ADD_ITEM', item });
     }
 
-    function removeItem(id: string) {
+    function removeItem(id: number) {
         dispatchCartAction({ type: 'REMOVE_ITEM', id });
+    }
+
+    function updateQuantity(id: number, delta: number) {
+        dispatchCartAction({ type: 'UPDATE_QUANTITY', id, delta });
     }
 
     function clearCart() {
@@ -101,7 +131,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         items: cart.items,
         addItem,
         removeItem,
-        clearCart
+        clearCart,
+        updateQuantity
     };
 
     console.log(cartContext); // temporary

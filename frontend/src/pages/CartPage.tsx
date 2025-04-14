@@ -1,43 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-}
+import CartContext, { CartItem } from '@/store/CartContext';
 
 export default function CartPage() {
-    const [cart, setCart] = useState<CartItem[]>([
-        { id: 1, name: 'Product A', price: 20, quantity: 1 },
-        { id: 2, name: 'Product B', price: 35, quantity: 9 },
-        { id: 3, name: 'Product C', price: 50, quantity: 4 }
-    ]);
+    const cartCtx = useContext(CartContext);
 
-    const removeFromCart = (id: CartItem['id']) => {
-        setCart(prevCart => prevCart.filter(item => item.id !== id));
-    };
-
-    const updateQuantity = (id: CartItem['id'], delta: number) => {
-        setCart(prevCart =>
-            prevCart
-                .map(item =>
-                    item.id === id
-                        ? {
-                            ...item,
-                            quantity: Math.max(1, item.quantity + delta)
-                        }
-                        : item
-                )
-                .filter(item => item.quantity > 0)
-        );
-    };
-
-    const totalPrice = cart.reduce((acc, item) => acc + item.price, 0);
+    const totalPrice = cartCtx.items.reduce((acc, item) => acc + item.price, 0);
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
@@ -46,11 +17,11 @@ export default function CartPage() {
                     Cart <ShoppingCart className="inline-block w-5 h-5" />
                 </h1>
                 <hr />
-                {cart.length === 0 ? (
+                {cartCtx.items.length === 0 ? (
                     <p className="text-gray-500 mt-6">Your cart is empty.</p>
                 ) : (
                     <ul className="mt-6">
-                        {cart.map(item => (
+                        {cartCtx.items.map(item => (
                             <li
                                 key={item.id}
                                 className="flex justify-between items-center mt-3"
@@ -67,7 +38,7 @@ export default function CartPage() {
                                         size="icon"
                                         variant="outline"
                                         onClick={() =>
-                                            updateQuantity(item.id, -1)
+                                            cartCtx.updateQuantity(item.id, -1)
                                         }
                                     >
                                         ➖
@@ -79,7 +50,7 @@ export default function CartPage() {
                                         size="icon"
                                         variant="outline"
                                         onClick={() =>
-                                            updateQuantity(item.id, 1)
+                                            cartCtx.updateQuantity(item.id, 1)
                                         }
                                     >
                                         ➕
@@ -88,7 +59,9 @@ export default function CartPage() {
                                         size="icon"
                                         variant="destructive"
                                         className="ml-4"
-                                        onClick={() => removeFromCart(item.id)}
+                                        onClick={() =>
+                                            cartCtx.removeItem(item.id)
+                                        }
                                     >
                                         ❌
                                     </Button>
@@ -99,10 +72,11 @@ export default function CartPage() {
                 )}
                 <hr className="mt-6 mb-2" />
                 <div className="flex justify-between items-center">
-                    <Button disabled={!cart.length} className="mt-4 px-8">
-                        <Link to="/checkout">
-                            Proceed to Checkout
-                        </Link>
+                    <Button
+                        disabled={!cartCtx.items.length}
+                        className="mt-4 px-8"
+                    >
+                        <Link to="/checkout">Proceed to Checkout</Link>
                     </Button>
                     <p className="mt-4 font-bold">Total: ${totalPrice}</p>
                 </div>
