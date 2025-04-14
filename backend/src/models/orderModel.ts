@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
-import { Product } from './productModel';
+import { User } from './userModel';
 
 // Define the Order schema
 export interface OrderSchema {
@@ -35,33 +35,33 @@ Order.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'users',
-                key: 'id',
-            },
+                model: User,
+                key: 'id'
+            }
         },
         totalAmount: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false,
+            allowNull: false
         },
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
             allowNull: false,
-            defaultValue: 'pending',
+            defaultValue: 'pending'
         },
         orderDate: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: DataTypes.NOW,
+            defaultValue: DataTypes.NOW
         },
         shippingAddress: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         }
     },
     {
@@ -70,19 +70,5 @@ Order.init(
         modelName: 'Order'
     }
 );
-
-// Define associations
-Order.belongsToMany(Product, {
-    through: 'OrderProducts',
-    as: 'products',
-    foreignKey: 'orderId'
-});
-
-Product.belongsToMany(Order, {
-    through: 'OrderProducts',
-    as: 'orders',
-    foreignKey: 'productId'
-});
-
 
 export default Order;
