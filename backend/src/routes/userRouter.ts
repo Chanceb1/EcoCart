@@ -1,38 +1,30 @@
-import express from 'express';
-import type { Request, Response } from 'express';
-import { promises as fs } from 'fs';
+import express, { Request, Response } from 'express';
+import User from '../models/userModel';
 
 
 const userRouter = express.Router();
 
-// Interface for User type
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  address: string;
-  city: string;
-  postalCode: string;
-}
 
 /**
  * @swagger
  * /api/users:
  *   get:
  *     summary: Returns all users
- *     tags: [Users]  # Add the tag here
+ *     tags: [Users]
  *     responses:
  *       200:
  *         description: List of users
  */
-userRouter.get('/users', async (req, res) => {
-  try {
-    const users = await fs.readFile('./data/users.json', 'utf8');
-    res.json(JSON.parse(users));
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ message: 'Failed to load users.' });
-  }
+userRouter.get('/', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const users = await User.findAll({
+            attributes: { exclude: ['password'] } // Don't send passwords
+        });
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Failed to load users.' });
+    }
 });
 
 
@@ -41,39 +33,38 @@ userRouter.get('/users', async (req, res) => {
  * /api/users/{id}:
  *   get:
  *     summary: Returns a user by ID
- *     tags: [Users]  # Add the tag here
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: ID of the user to retrieve
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: User details
  *       404:
  *         description: User not found
  */
-userRouter.get('/user/:id', async (req, res): Promise<any> => {
-  try {
-    const userId = req.params.id;
-    const users = await fs.readFile('./data/users.json', 'utf8');
-    const allUsers = JSON.parse(users);
-    
-    const user = allUsers.find((user: User) => user.id === userId);
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-    
-    res.json(user);
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Failed to load user data.' });
-  }
-});
+userRouter.get('/:id', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = parseInt(req.params.id);
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] }
+        });
 
+        if (!user) {
+            res.status(404).json({ message: 'User not found.' });
+            return;
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Failed to load user data.' });
+    }
+});
 
 /**
  * @swagger
@@ -88,46 +79,47 @@ userRouter.get('/user/:id', async (req, res): Promise<any> => {
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstName:
  *                 type: string
- *                 description: User's name
+ *               lastName:
+ *                 type: string
  *               email:
  *                 type: string
- *                 description: User's email address
+ *               password:
+ *                 type: string
  *               address:
  *                 type: string
- *                 description: User's address
- *               city:
- *                 type: string
- *                 description: User's city
- *               postalCode:
- *                 type: string
- *                 description: User's postal code
  *     responses:
  *       201:
  *         description: User created successfully
  *       400:
  *         description: Invalid input
- *       500:
- *         description: Failed to create user
  */
-userRouter.post('/user', async (req: Request, res: Response) => {
-  try {
-    const newUser: User = {
-      id: Math.random().toString(36).substring(7),
-      ...req.body
-    };
+userRouter.post('/', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { firstName, lastName, email, password, address } = req.body;
 
-    const users = await fs.readFile('./data/users.json', 'utf8');
-    const allUsers = JSON.parse(users);
-    allUsers.push(newUser);
+        if (!firstName || !lastName || !email || !password) {
+            res.status(400).json({ message: 'Missing required fields' });
+            return;
+        }
 
-    await fs.writeFile('./data/users.json', JSON.stringify(allUsers, null, 2));
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Failed to create user.' });
-  }
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password,
+            address,
+            role: 'user'
+        });
+
+        // Don't send the password back
+        const { password: _, ...userWithoutPassword } = user.toJSON();
+        res.status(201).json(userWithoutPassword);
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ message: 'Failed to create user.' });
+    }
 });
 
 
@@ -136,50 +128,72 @@ userRouter.post('/user', async (req: Request, res: Response) => {
  * /api/users/{id}:
  *   put:
  *     summary: Updates a user by ID
- *     tags: [Users]  # Add the tag here
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the user to update
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               address:
+ *                 type: string
  *     responses:
  *       200:
  *         description: User updated successfully
  *       404:
  *         description: User not found
  *       500:
- *         description: Failed to update user
+ *         description: Server error
  */
-userRouter.put('/:id', async (req, res): Promise<any> => {
-  try {
-    const userId = req.params.id;
-    const updatedUserData = req.body;
-    
-    const users = await fs.readFile('./data/users.json', 'utf8');
-    const allUsers = JSON.parse(users);
-    
-    const userIndex = allUsers.findIndex((user: User) => user.id === userId);
-    
-    if (userIndex === -1) {
-      return res.status(404).json({ message: 'User not found.' });
+userRouter.put('/:id', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { firstName, lastName, email, address } = req.body;
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            res.status(404).json({ message: 'User not found.' });
+            return;
+        }
+
+        // Update the user
+        await user.update({
+            firstName,
+            lastName,
+            email,
+            address
+        });
+
+        // Fetch the updated user to ensure we have the latest data
+        const updatedUser = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] }
+        });
+
+        if (!updatedUser) {
+            res.status(500).json({ message: 'Error retrieving updated user.' });
+            return;
+        }
+
+        // Send the response with status code
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Failed to update user.' });
     }
-    
-    allUsers[userIndex] = { ...allUsers[userIndex], ...updatedUserData };
-    await fs.writeFile('./data/users.json', JSON.stringify(allUsers, null, 2));
-    
-    res.json(allUsers[userIndex]);
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ message: 'Failed to update user.' });
-  }
 });
 
 
@@ -188,43 +202,40 @@ userRouter.put('/:id', async (req, res): Promise<any> => {
  * /api/users/{id}:
  *   delete:
  *     summary: Deletes a user by ID
- *     tags: [Users]  # Add the tag here
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the user to delete
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: User deleted successfully
  *       404:
  *         description: User not found
  *       500:
- *         description: Failed to delete user
+ *         description: Server error
  */
-userRouter.delete('/user/:id', async (req, res): Promise<any> => {
-  try {
-    const userId = req.params.id;
-    const users = await fs.readFile('./data/users.json', 'utf8');
-    const allUsers = JSON.parse(users);
-    
-    const userIndex = allUsers.findIndex((user: User) => user.id === userId);
-    
-    if (userIndex === -1) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-    
-    allUsers.splice(userIndex, 1);
-    await fs.writeFile('./data/users.json', JSON.stringify(allUsers, null, 2));
-    
-    res.status(200).json({ message: 'User deleted successfully.' });
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ message: 'Failed to delete user.' });
-  }
-});
+userRouter.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = parseInt(req.params.id);
+        const user = await User.findByPk(userId);
 
+        if (!user) {
+            res.status(404).json({ message: 'User not found.' });
+            return;
+        }
+
+        await user.destroy();
+        res.status(200).json({ 
+            message: 'User deleted successfully',
+            deletedUserId: userId
+          });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Failed to delete user.' });
+    }
+});
 
 export default userRouter;
