@@ -71,17 +71,4 @@ Order.init(
     }
 );
 
-// Define associations after both models are initialized
-
-User.hasMany(Order, {
-    sourceKey: 'id',
-    foreignKey: 'userId',
-    as: 'userOrders'
-});
-
-Order.belongsTo(User, {
-    foreignKey: 'userId',
-    as: 'orderer'
-});
-
 export default Order;

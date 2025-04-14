@@ -41,19 +41,19 @@ Product.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         description: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         price: {
             type: DataTypes.FLOAT,
-            allowNull: false,
+            allowNull: false
         },
         imageUrl: {
             type: DataTypes.STRING,
@@ -83,13 +83,5 @@ Product.init(
         modelName: 'Product'
     }
 );
-
-// define associations
-Product.belongsToMany(Order, {
-    through: 'OrderProducts',
-    as: 'productOrders',
-    foreignKey: 'productId'
-});
-
 
 export default Product;
