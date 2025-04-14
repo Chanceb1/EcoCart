@@ -8,7 +8,13 @@ import CartContext, { CartItem } from '@/store/CartContext';
 export default function CartPage() {
     const cartCtx = useContext(CartContext);
 
-    const totalPrice = cartCtx.items.reduce((acc, item) => acc + item.price, 0);
+    const totalPrice =
+        Math.ceil(
+            cartCtx.items.reduce(
+                (acc, item) => acc + item.price * item.quantity,
+                0
+            ) * 100
+        ) / 100;
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
