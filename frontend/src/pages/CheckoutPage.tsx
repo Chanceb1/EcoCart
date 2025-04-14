@@ -13,6 +13,8 @@ const requestConfig = {
     }
 };
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
+
 export default function CheckoutPage() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
@@ -23,7 +25,7 @@ export default function CheckoutPage() {
         error,
         sendRequest,
         clearData
-    } = useHttp('http://localhost:5000/orders', requestConfig);
+    } = useHttp(apiBaseUrl + '/api/orders/orders', requestConfig);
 
     const cartTotal = cartCtx.items.reduce(
         (total, item) => total + item.quantity * item.price,
