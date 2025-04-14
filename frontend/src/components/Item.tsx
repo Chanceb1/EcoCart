@@ -27,20 +27,18 @@ export default function Item({ item }: ItemProps): JSX.Element {
     return (
         <li className="bg-white rounded-lg shadow-lg overflow-hidden">
             <article className="bg-white rounded-lg overflow-hidden min-h-full">
-                <Link 
-                    to={`/product/${item.id}`}
-                >
-                <img
-                    src={`${apiBaseUrl}/${item.image}`}
-                    alt={item.name}
-                    className="w-full h-48 object-cover"
-                />
+                <Link to={`/product/${item.id}`}>
+                    <img
+                        src={`${apiBaseUrl}/${item.image}`}
+                        alt={item.name}
+                        className="w-full h-48 object-cover"
+                    />
                 </Link>
                 <div className="p-3">
-                    <Link 
-                        to={`/product/${item.id}`}
-                    >
-                    <h3 className="text-lg font-semibold mb-2 hover:text-green-600 hover:underline">{item.name}</h3>
+                    <Link to={`/product/${item.id}`}>
+                        <h3 className="text-lg font-semibold mb-2 hover:text-green-600 hover:underline">
+                            {item.name}
+                        </h3>
                     </Link>
                     <div className="grid grid-cols-2 gap-1 justify-center items-center">
                         <p className="text-sm col-span-1 text-gray-700 text-right max-h-20 text-ellipsis overflow-clip">
@@ -53,7 +51,6 @@ export default function Item({ item }: ItemProps): JSX.Element {
                     <div className="p-4 text-center">
                         <Button
                             onClick={handleAddItemToCart}
-                            textOnly={true}
                             className="add-to-cart-button"
                         >
                             Add to Cart
