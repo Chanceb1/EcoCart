@@ -83,24 +83,9 @@ function cartReducer(state: { items: CartItem[] }, action: CartAction) {
             (item: any) => item.id === action.id
         );
 
-        const existingCartItem = state.items[existingCartItemIndex];
+        state.items.splice(existingCartItemIndex, 1);
 
-        const updatedItems = [...state.items];
-
-        if (existingCartItem.quantity === 1) {
-            updatedItems.splice(existingCartItemIndex, 1);
-        } else {
-            const updatedItem = {
-                ...existingCartItem,
-                quantity: existingCartItem.quantity - 1
-            };
-            updatedItems[existingCartItemIndex] = updatedItem;
-        }
-
-        return {
-            ...state,
-            items: updatedItems
-        };
+        return { ...state };
     }
 
     if (action.type === 'CLEAR_CART') {
