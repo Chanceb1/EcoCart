@@ -89,12 +89,7 @@ export default function CheckoutPage() {
     return (
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold mb-6">Checkout</h1>
-            {error && (
-                <Error
-                    title="Could not submit order!"
-                    message={error}
-                />
-            )}
+            {error && <Error title="Could not submit order!" message={error} />}
             <form
                 className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                 onSubmit={handleSubmit}
@@ -180,9 +175,7 @@ export default function CheckoutPage() {
                     />
                 </div>
                 <div className="mb-6">
-                    <h2
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                    >
+                    <h2 className="block text-gray-700 text-sm font-bold mb-2">
                         Total Amount: {currencyFormatter.format(cartTotal)}
                     </h2>
                 </div>
