@@ -72,10 +72,7 @@ function cartReducer(state: { items: CartItem[] }, action: CartAction) {
             updatedItems.push({ ...action.item, quantity: 1 });
         }
 
-        return {
-            ...state,
-            items: updatedItems
-        };
+        return { items: updatedItems };
     }
 
     if (action.type === 'REMOVE_ITEM') {
@@ -83,18 +80,15 @@ function cartReducer(state: { items: CartItem[] }, action: CartAction) {
             (item: any) => item.id === action.id
         );
 
-        state.items.splice(existingCartItemIndex, 1);
-
-        return { ...state };
+        return { items: state.items.toSpliced(existingCartItemIndex, 1) };
     }
 
     if (action.type === 'CLEAR_CART') {
-        return { ...state, items: [] };
+        return { items: [] };
     }
 
     if (action.type === 'UPDATE_QUANTITY') {
         return {
-            ...state,
             items: state.items
                 .map(item =>
                     item.id === action.id
