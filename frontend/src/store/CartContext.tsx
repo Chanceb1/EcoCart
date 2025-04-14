@@ -1,17 +1,18 @@
 import { ReactNode, createContext, useReducer } from 'react';
 
-type CartItem = {
-    id: string;
+export interface CartItem {
+    id: number;
     name: string;
     price: number;
     quantity: number;
-};
+}
 
 type CartContextType = {
     items: CartItem[];
     addItem: (item: CartItem) => void;
-    removeItem: (id: string) => void;
+    removeItem: (id: number) => void;
     clearCart: () => void;
+    updateQuantity: (id: number, delta: number) => void;
 };
 
 type CartContextProviderProps = {
@@ -22,10 +23,37 @@ export const CartContext = createContext<CartContextType>({
     items: [],
     addItem: item => {},
     removeItem: id => {},
-    clearCart: () => {}
+    clearCart: () => {},
+    updateQuantity: (id, delta) => {}
 });
 
-function cartReducer(state: any, action: any) {
+interface AddItemAction {
+    type: 'ADD_ITEM';
+    item: CartItem;
+}
+
+interface RemoveItemAction {
+    type: 'REMOVE_ITEM';
+    id: number;
+}
+
+interface ClearCartAction {
+    type: 'CLEAR_CART';
+}
+
+interface UpdateQuantityAction {
+    type: 'UPDATE_QUANTITY';
+    id: number;
+    delta: number;
+}
+
+type CartAction =
+    | AddItemAction
+    | RemoveItemAction
+    | ClearCartAction
+    | UpdateQuantityAction;
+
+function cartReducer(state: { items: CartItem[] }, action: CartAction) {
     if (action.type === 'ADD_ITEM') {
         const existingCartItemIndex = state.items.findIndex(
             (item: any) => item.id === action.item.id
@@ -44,10 +72,7 @@ function cartReducer(state: any, action: any) {
             updatedItems.push({ ...action.item, quantity: 1 });
         }
 
-        return {
-            ...state,
-            items: updatedItems
-        };
+        return { items: updatedItems };
     }
 
     if (action.type === 'REMOVE_ITEM') {
@@ -55,42 +80,52 @@ function cartReducer(state: any, action: any) {
             (item: any) => item.id === action.id
         );
 
-        const existingCartItem = state.items[existingCartItemIndex];
-
-        const updatedItems = [...state.items];
-
-        if (existingCartItem.quantity === 1) {
-            updatedItems.splice(existingCartItemIndex, 1);
-        } else {
-            const updatedItem = {
-                ...existingCartItem,
-                quantity: existingCartItem.quantity - 1
-            };
-            updatedItems[existingCartItemIndex] = updatedItem;
-        }
-
-        return {
-            ...state,
-            items: updatedItems
-        };
+        return { items: state.items.toSpliced(existingCartItemIndex, 1) };
     }
 
     if (action.type === 'CLEAR_CART') {
-        return { ...state, items: [] };
+        return { items: [] };
+    }
+
+    if (action.type === 'UPDATE_QUANTITY') {
+        return {
+            items: state.items
+                .map(item =>
+                    item.id === action.id
+                        ? {
+                              ...item,
+                              quantity: Math.max(
+                                  1,
+                                  item.quantity + action.delta
+                              )
+                          }
+                        : item
+                )
+                .filter(item => item.quantity > 0)
+        };
     }
 
     return state;
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-    const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
+    const [cart, dispatchCartAction] = useReducer<{ items: CartItem[] }, any>(
+        cartReducer,
+        {
+            items: []
+        }
+    );
 
     function addItem(item: CartItem) {
         dispatchCartAction({ type: 'ADD_ITEM', item });
     }
 
-    function removeItem(id: string) {
+    function removeItem(id: number) {
         dispatchCartAction({ type: 'REMOVE_ITEM', id });
+    }
+
+    function updateQuantity(id: number, delta: number) {
+        dispatchCartAction({ type: 'UPDATE_QUANTITY', id, delta });
     }
 
     function clearCart() {
@@ -101,7 +136,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         items: cart.items,
         addItem,
         removeItem,
-        clearCart
+        clearCart,
+        updateQuantity
     };
 
     console.log(cartContext); // temporary

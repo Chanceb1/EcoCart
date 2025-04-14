@@ -8,7 +8,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ErrorPage from './pages/ErrorPage';
 import ContactPage from './pages/ContactPage';
-import UserAccountPage from './pages/UserAccountPage';
+import UserAccountPage from './pages/userAccountPage';
 import SellerDashboard from './pages/SellerDashboard';
 import PrivacyPolicy from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'product/:id',
-                element: <ProductPage/>
+                element: <ProductPage />
             },
             {
                 path: 'about',
@@ -56,7 +56,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'checkout',
-                element: <CheckoutPage />,
+                element: <CheckoutPage />
             },
             {
                 path: 'contact',
@@ -78,7 +78,6 @@ export const router = createBrowserRouter([
                 path: 'signup',
                 element: <SignupPage />
             }
-            
         ]
     }
 ]);
