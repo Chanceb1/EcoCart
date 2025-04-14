@@ -5,11 +5,16 @@ import { CartContext } from '../store/CartContext';
 import { Link } from 'react-router-dom';
 
 export interface Item {
-    id: string;
+    id: number;
     name: string;
     price: number;
     description: string;
-    image: string;
+    imageUrl: string;
+    createdAt?: string;
+    updatedAt?: string;
+    category: string;
+    recycle_method: string;
+    rating: number;
 }
 
 interface ItemProps {
@@ -21,7 +26,12 @@ export default function Item({ item }: ItemProps): JSX.Element {
     const cartCtx = useContext(CartContext);
 
     function handleAddItemToCart() {
-        cartCtx.addItem({ ...item, quantity: 1 });
+        cartCtx.addItem({
+            id: item!.id,
+            name: item!.name,
+            price: item!.price,
+            quantity: 1
+        });
     }
 
     return (
@@ -29,7 +39,7 @@ export default function Item({ item }: ItemProps): JSX.Element {
             <article className="bg-white rounded-lg overflow-hidden min-h-full">
                 <Link to={`/product/${item.id}`}>
                     <img
-                        src={`${apiBaseUrl}/${item.image}`}
+                        src={`${apiBaseUrl}/${item.imageUrl}`}
                         alt={item.name}
                         className="w-full h-48 object-cover"
                     />

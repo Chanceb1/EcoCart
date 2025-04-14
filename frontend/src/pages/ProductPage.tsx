@@ -4,19 +4,7 @@ import { CartContext } from '../store/CartContext';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import useHttp from '../Hooks/useHttp';
-
-interface Item {
-    id: number; // Changed from string to number
-    name: string;
-    price: number;
-    description: string;
-    imageUrl: string; // Changed from image to imageUrl to match backend
-    createdAt?: string;
-    updatedAt?: string;
-    category: string;
-    recycle_method: string;
-    rating: number;
-}
+import { Item } from '@/components/Item';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
