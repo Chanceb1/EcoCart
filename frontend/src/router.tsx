@@ -12,6 +12,9 @@ import UserAccountPage from './pages/UserAccountPage';
 import SellerDashboard from './pages/SellerDashboard';
 import PrivacyPolicy from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
+import AdminDashboard from './pages/AdminDashboard';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignUpPage';
 
 export const router = createBrowserRouter([
     {
@@ -62,6 +65,18 @@ export const router = createBrowserRouter([
             {
                 path: 'seller-dashboard',
                 element: <SellerDashboard />
+            },
+            {
+                path: 'admin-dashboard',
+                element: <AdminDashboard />
+            },
+            {
+                path: 'login',
+                element: <LoginPage />
+            },
+            {
+                path: 'signup',
+                element: <SignupPage />
             }
             
         ]

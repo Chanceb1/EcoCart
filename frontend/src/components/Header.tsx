@@ -104,6 +104,15 @@ export default function Header() {
                             </Link>
                         </NavigationMenuItem>
 
+                        <NavigationMenuItem>
+                            <Link
+                                to="/admin-dashboard"
+                                className={transparentNavigationMenuTriggerStyle()}
+                            >
+                                Admin Dashboard
+                            </Link>
+                        </NavigationMenuItem>
+
                     </NavigationMenuList>
                 </NavigationMenu>
 
@@ -120,6 +129,12 @@ export default function Header() {
                         className={transparentNavigationMenuTriggerStyle()}
                     >
                         Cart
+                    </Link>
+                    <Link
+                        to="/login"
+                        className={transparentNavigationMenuTriggerStyle()}
+                    >
+                        Login
                     </Link>
                 </div>
             </div>
