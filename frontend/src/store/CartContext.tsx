@@ -24,10 +24,36 @@ export const CartContext = createContext<CartContextType>({
     addItem: item => {},
     removeItem: id => {},
     clearCart: () => {},
-    updateQuantity: (id: number, delta: number) => {}
+    updateQuantity: (id, delta) => {}
 });
 
-function cartReducer(state: { items: CartItem[] }, action: any) {
+interface AddItemAction {
+    type: 'ADD_ITEM';
+    item: CartItem;
+}
+
+interface RemoveItemAction {
+    type: 'REMOVE_ITEM';
+    id: number;
+}
+
+interface ClearCartAction {
+    type: 'CLEAR_CART';
+}
+
+interface UpdateQuantityAction {
+    type: 'UPDATE_QUANTITY';
+    id: number;
+    delta: number;
+}
+
+type CartAction =
+    | AddItemAction
+    | RemoveItemAction
+    | ClearCartAction
+    | UpdateQuantityAction;
+
+function cartReducer(state: { items: CartItem[] }, action: CartAction) {
     if (action.type === 'ADD_ITEM') {
         const existingCartItemIndex = state.items.findIndex(
             (item: any) => item.id === action.item.id
