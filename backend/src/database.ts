@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
 
 // Import models
 import { User } from './models/userModel';
-import { Product } from './models/productModel';
+import { Product, ProductCategory, RecycleMethod } from './models/productModel';
 import { setupAssociations } from './middleware/associations';
 
 // Initialize database
@@ -72,19 +72,64 @@ const seedDatabase = async () => {
                 name: 'Eco-Friendly Water Bottle',
                 description: 'Reusable stainless steel water bottle',
                 price: 24.99,
-                imageUrl: '/images/water-bottle.jpg'
+                imageUrl: '/images/water-bottle.jpg',
+                category: 'consumables',
+                recycle_method: 'metal',
+                rating: 4
             },
             {
                 name: 'Bamboo Utensil Set',
                 description: 'Sustainable bamboo cutlery set',
                 price: 15.99,
-                imageUrl: '/images/bamboo-utensils.jpg'
+                imageUrl: '/images/bamboo-utensils.jpg',
+                category: 'consumables',
+                recycle_method: 'compostable',
+                rating: 3
             },
             {
                 name: 'Organic Cotton Tote',
                 description: 'Reusable shopping bag made from organic cotton',
                 price: 12.99,
-                imageUrl: '/images/tote-bag.jpg'
+                imageUrl: '/images/tote-bag.jpg',
+                category: 'storage',
+                recycle_method: 'compostable',
+                rating: 4
+            },
+            {
+                name: 'Biodegradable Phone Case',
+                description: 'Eco-friendly phone case made from biodegradable materials',
+                price: 19.99,
+                imageUrl: '/images/phone-case.jpg',
+                category: 'electronics',
+                recycle_method: 'compostable',
+                rating: 5
+            },
+            {
+                name: 'Solar-Powered Charger',
+                description: 'Portable solar charger for devices',
+                price: 39.99,
+                imageUrl: '/images/solar-charger.jpg',
+                category: 'electronics',
+                recycle_method: 'metal',
+                rating: 2
+            },
+            {
+                name: 'Recycled Paper Notebook',
+                description: 'Notebook made from recycled paper',
+                price: 9.99,
+                imageUrl: '/images/notebook.jpg',
+                category: 'consumables',
+                recycle_method: 'paper',
+                rating: 3
+            },
+            {
+                name: "Smart Phone",
+                description: "Eco-conscious smartphone. High performance, planet friendly.",
+                price: 699.99,
+                imageUrl: "/images/electronics/smartphone.jpg",
+                category: 'electronics',
+                recycle_method: 'metal',
+                rating: 4
             }
         ];
 
