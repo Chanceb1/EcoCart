@@ -2,6 +2,7 @@ import { JSX, useContext } from 'react';
 import { currencyFormatter } from '../Utils/formatting';
 import { Button } from './ui/Button';
 import { CartContext } from '../store/CartContext';
+import { Link } from 'react-router-dom';
 
 export interface Item {
     id: string;
@@ -26,13 +27,21 @@ export default function Item({ item }: ItemProps): JSX.Element {
     return (
         <li className="bg-white rounded-lg shadow-lg overflow-hidden">
             <article className="bg-white rounded-lg overflow-hidden min-h-full">
+                <Link 
+                    to={`/product/${item.id}`}
+                >
                 <img
                     src={`${apiBaseUrl}/${item.image}`}
                     alt={item.name}
                     className="w-full h-48 object-cover"
                 />
+                </Link>
                 <div className="p-3">
-                    <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
+                    <Link 
+                        to={`/product/${item.id}`}
+                    >
+                    <h3 className="text-lg font-semibold mb-2 hover:text-green-600 hover:underline">{item.name}</h3>
+                    </Link>
                     <div className="grid grid-cols-2 gap-1 justify-center items-center">
                         <p className="text-sm col-span-1 text-gray-700 text-right max-h-20 text-ellipsis overflow-clip">
                             {item.description}

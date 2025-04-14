@@ -1,7 +1,6 @@
 import { JSX } from 'react';
 import Item from './Item';
 import useHttp from '../Hooks/useHttp';
-import Error from './Error';
 
 interface Item {
     id: number;  // Changed from string to number
