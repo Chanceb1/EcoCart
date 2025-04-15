@@ -1,174 +1,155 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../components/ui/Button';
+import { useAuth } from '@/contexts/AuthContext';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-    postalCode: string;
-}
 
 const UserAccountPage = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { user: authUser, token } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState({
+        firstName: authUser?.firstName || '',
+        lastName: authUser?.lastName || '',
+        email: authUser?.email || '',
+        address: authUser?.address || ''
+    });
+    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        // Simulate fetching user data from an API
-        const fetchUserData = async () => {
-            setIsLoading(true);
-            try {
-                // Replace with your actual API endpoint
-                const response = await fetch('http://localhost:5000/user/1');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user data');
-                }
-                const data: User = await response.json();
-                setUser(data);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, []);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const handleEditClick = () => {
         setIsEditing(true);
+        setFormData({
+            firstName: authUser?.firstName || '',
+            lastName: authUser?.lastName || '',
+            email: authUser?.email || '',
+            address: authUser?.address || ''
+        });
     };
 
     const handleCancelClick = () => {
         setIsEditing(false);
+        setError(null);
     };
 
-    const handleSaveClick = () => {
-        // Implement save logic here (e.g., send updated data to API)
-        setIsEditing(false);
+    const handleSaveClick = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update profile');
+            }
+
+            const updatedUser = await response.json();
+            // You might want to update the auth context here with the new user data
+            setIsEditing(false);
+            setError(null);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to update profile');
+        }
     };
 
-    if (isLoading) {
-        return (
-            <div className="container mx-auto py-8">
-                <h1 className="text-2xl font-bold mb-4">User Account</h1>
-                <p>Loading user data...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="container mx-auto py-8">
-                <h1 className="text-2xl font-bold mb-4">User Account</h1>
-                <p className="text-red-500">Error: {error}</p>
-            </div>
-        );
+    if (!authUser) {
+        return <div>Please log in to view your profile.</div>;
     }
 
     return (
-        <div className="container mx-auto py-8">
-            <h1 className="text-2xl font-bold mb-4">User Account</h1>
+        <div className="container mx-auto py-8 max-w-2xl">
+            <div className="bg-white shadow-md rounded-lg p-6">
+                <h1 className="text-2xl font-bold mb-6">User Profile</h1>
 
-            {isEditing ? (
-                // Edit Mode
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                            Name
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="name"
-                            type="text"
-                            value={user?.name || ''}
-                        // onChange={(e) => setUser({ ...user, name: e.target.value })} // Implement onChange handlers
-                        />
+                {error && (
+                    <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                        {error}
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email"
-                            type="email"
-                            value={user?.email || ''}
-                        // onChange={(e) => setUser({ ...user, email: e.target.value })} // Implement onChange handlers
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
-                            Address
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="address"
-                            type="text"
-                            value={user?.address || ''}
-                        // onChange={(e) => setUser({ ...user, address: e.target.value })} // Implement onChange handlers
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
-                            City
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="city"
-                            type="text"
-                            value={user?.city || ''}
-                        // onChange={(e) => setUser({ ...user, city: e.target.value })} // Implement onChange handlers
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="postalCode">
-                            Postal Code
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="postalCode"
-                            type="text"
-                            value={user?.postalCode || ''}
-                        // onChange={(e) => setUser({ ...user, postalCode: e.target.value })} // Implement onChange handlers
-                        />
-                    </div>
+                )}
 
-                    <div className="flex justify-end">
-                        <Button onClick={handleCancelClick} variant="secondary">Cancel</Button>
-                        <Button onClick={handleSaveClick} className="ml-2">Save</Button>
+                {isEditing ? (
+                    // Edit Mode
+                    <div className="space-y-4">
+                        <div>
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input
+                                id="lastName"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="address">Address</Label>
+                            <Input
+                                id="address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-2 pt-4">
+                            <Button variant="outline" onClick={handleCancelClick}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleSaveClick}>
+                                Save Changes
+                            </Button>
+                        </div>
                     </div>
-                </div>
-            ) : (
-                // View Mode
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-                        <p>{user?.name}</p>
+                ) : (
+                    // View Mode
+                    <div className="space-y-4">
+                        <div>
+                            <Label>Name</Label>
+                            <p className="mt-1">{authUser.firstName} {authUser.lastName}</p>
+                        </div>
+                        <div>
+                            <Label>Email</Label>
+                            <p className="mt-1">{authUser.email}</p>
+                        </div>
+                        <div>
+                            <Label>Address</Label>
+                            <p className="mt-1">{authUser.address || 'No address provided'}</p>
+                        </div>
+                        <div className="pt-4">
+                            <Button onClick={handleEditClick}>
+                                Edit Profile
+                            </Button>
+                        </div>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                        <p>{user?.email}</p>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Address:</label>
-                        <p>{user?.address}</p>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">City:</label>
-                        <p>{user?.city}</p>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Postal Code:</label>
-                        <p>{user?.postalCode}</p>
-                    </div>
-
-                    <Button onClick={handleEditClick}>Edit</Button>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
