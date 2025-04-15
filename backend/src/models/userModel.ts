@@ -11,7 +11,7 @@ export interface UserSchema {
     email: string;
     password: string;
     address?: string;
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'seller';
 }
 
 // Define the User model
@@ -22,7 +22,7 @@ export class User extends Model<UserSchema> implements UserSchema {
     public email!: string;
     public password!: string;
     public address!: string;
-    public role!: 'user' | 'admin';
+    public role!: 'user' | 'admin' | 'seller';
 
     // Instance method to generate JWT token
     public generateToken(): string {
