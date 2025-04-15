@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { promises as fs } from 'fs';
 
-
 const orderRouter = express.Router();
 
 interface Order {
@@ -83,6 +82,5 @@ orderRouter.post('/orders', async (req, res): Promise<any> => {
         res.status(500).json({ message: 'Failed to create order.' });
     }
 });
-
 
 export default orderRouter;

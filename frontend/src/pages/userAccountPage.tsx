@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 const UserAccountPage = () => {
-    const { user: authUser, token, login} = useAuth();
+    const { user: authUser, token, login } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         firstName: authUser?.firstName || '',
@@ -41,21 +42,24 @@ const UserAccountPage = () => {
 
     const handleSaveClick = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/users/${authUser?.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
+            const response = await fetch(
+                `${apiBaseUrl}api/users/${authUser?.id}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                }
+            );
 
             if (!response.ok) {
                 throw new Error('Failed to update profile');
             }
 
             const updatedUser = await response.json();
-            
+
             // Update the auth context with new user data
             if (token) {
                 login(token, updatedUser);
@@ -65,7 +69,9 @@ const UserAccountPage = () => {
             setIsEditing(false);
             setError(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to update profile');
+            setError(
+                err instanceof Error ? err.message : 'Failed to update profile'
+            );
         }
     };
 
@@ -125,7 +131,10 @@ const UserAccountPage = () => {
                             />
                         </div>
                         <div className="flex justify-end space-x-2 pt-4">
-                            <Button variant="outline" onClick={handleCancelClick}>
+                            <Button
+                                variant="outline"
+                                onClick={handleCancelClick}
+                            >
                                 Cancel
                             </Button>
                             <Button onClick={handleSaveClick}>
@@ -138,7 +147,9 @@ const UserAccountPage = () => {
                     <div className="space-y-4">
                         <div>
                             <Label>Name</Label>
-                            <p className="mt-1">{authUser.firstName} {authUser.lastName}</p>
+                            <p className="mt-1">
+                                {authUser.firstName} {authUser.lastName}
+                            </p>
                         </div>
                         <div>
                             <Label>Email</Label>
@@ -146,7 +157,9 @@ const UserAccountPage = () => {
                         </div>
                         <div>
                             <Label>Address</Label>
-                            <p className="mt-1">{authUser.address || 'No address provided'}</p>
+                            <p className="mt-1">
+                                {authUser.address || 'No address provided'}
+                            </p>
                         </div>
                         <div className="pt-4">
                             <Button onClick={handleEditClick}>

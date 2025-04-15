@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-interface User {
+export interface User {
     id: number;
     firstName: string;
     lastName: string;
     email: string;
     address: string;
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'seller';
 }
 
 interface AuthContextType {
@@ -45,7 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!token
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    );
 }
 
 export const useAuth = () => {

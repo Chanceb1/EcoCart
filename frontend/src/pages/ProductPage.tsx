@@ -1,7 +1,8 @@
 import { JSX, useContext } from 'react';
 import { currencyFormatter } from '@/Utils/formatting';
 import { CartContext } from '../store/CartContext';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link} from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import useHttp from '../Hooks/useHttp';
 import { Item } from '@/components/Item';
@@ -16,7 +17,10 @@ const requestConfig = {
 };
 
 export default function ProductPage(): JSX.Element {
+    const navigate = useNavigate();
+
     const { id } = useParams();
+
     const {
         data: product,
         isLoading,
@@ -49,6 +53,17 @@ export default function ProductPage(): JSX.Element {
             price: product!.price,
             quantity: 1
         });
+    }
+
+    function addToCartCheckout() {
+        cartCtx.addItem({
+            id: product!.id,
+            name: product!.name,
+            price: product!.price,
+            quantity: 1
+        });
+        
+        navigate('/cart');
     }
 
     return (
@@ -105,7 +120,10 @@ export default function ProductPage(): JSX.Element {
                         >
                             Add to Cart
                         </Button>
-                        <Button className="text-wrap m-2 mb-6 w-4/5 place-self-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button
+                            className="text-wrap m-2 mb-6 w-4/5 place-self-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={addToCartCheckout}
+                        >
                             Add and Checkout
                         </Button>
                     </div>
