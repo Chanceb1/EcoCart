@@ -1,6 +1,6 @@
 # EcoCommerce Web Application
 
-A full-stack web application built with React + TypeScript frontend and Express.js backend.
+A full-stack web application built with React SPA frontend and Express.js backend.
 
 ## Tech Stack
 
@@ -10,13 +10,15 @@ A full-stack web application built with React + TypeScript frontend and Express.
 -   TypeScript + SWC
 -   TailwindCSS
 -   Vite
--   Context API for state management
 
 ### Backend
 
 -   Express.js
 -   Node.js
 -   TypeScript
+-   Swagger
+-   Sequelize
+-   SQLite
 
 ## Getting Started
 
@@ -24,7 +26,6 @@ A full-stack web application built with React + TypeScript frontend and Express.
 
 -   Node.js >= 20.17
 -   npm >= 10.9.0
--   PostgreSQL
 
 ### Installation
 
