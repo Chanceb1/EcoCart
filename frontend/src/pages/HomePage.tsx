@@ -42,13 +42,15 @@ const HomePage = () => {
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
+                    className="lg:absolute lg:inset-y-1/10 lg:left-6/10 w-1/2"
                 >
+                    <div className="flex place-content-center text-center size-100">
                     <img
-                        className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+                        className="object-contain text-center"
                         src={EcoIcon}
                         alt="Eco-friendly products"
                     />
+                    </div>
                 </motion.div>
             </div>
 

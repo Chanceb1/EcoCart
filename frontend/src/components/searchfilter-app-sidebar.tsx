@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Search } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
-import { SearchForm } from '@/components/searchfilter-search-form';
 import {
     Collapsible,
     CollapsibleContent,
@@ -16,17 +14,17 @@ import {
     SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
-    SidebarInput,
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail
 } from '@/components/ui/searchfilter-sidebar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useSearchParams } from 'react-router-dom';
+import ProductsFilterContext, {
+    FilterUpdate
+} from '@/store/ProductsFilterContext';
 
 // This is sample data.
 const data = {
@@ -76,35 +74,48 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const formRef = useRef(null);
-    let [searchParams, setSearchParams] = useSearchParams();
+    const { updateFilters } = useContext(ProductsFilterContext);
 
-    function filterProducts(event) {
-        const formData = new FormData(formRef.current);
-        setSearchParams(formData);
+    function filterProducts(event: React.FormEvent) {
+        event.preventDefault();
+        const formData = new FormData(event.target as HTMLFormElement);
+
+        const filters: FilterUpdate = {
+            search: Array.from(formData.entries())
+                .filter(([key]) => key === 'search')[0][1]
+                .toString(),
+            categories: Array.from(formData.entries())
+                .filter(([key]) => key === 'Category')
+                .map(([_, val]) => val.toString()),
+            recycleMethods: Array.from(formData.entries())
+                .filter(([key]) => key === 'Recycle Method')
+                .map(([_, val]) => val.toString())
+        };
+
+        updateFilters(filters);
     }
-    
+
     return (
         <Sidebar {...props}>
             <form ref={formRef} onSubmit={filterProducts}>
                 <SidebarHeader>
-                    
                     <div className="pt-16"></div>
 
                     <SidebarGroup className="py-0">
-                    <SidebarGroupContent className="relative">
-                    <Label htmlFor="search" className="sr-only">
-                        Search
-                    </Label>
-                    <input
-                        name="search"
-                        placeholder="Search products..."
-                        data-slot="sidebar-input"
-                        data-sidebar="input"
-                        className="bg-background h-8 w-full shadow-none pl-8"
-                    />
-                    <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none" />
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                        <SidebarGroupContent className="relative">
+                            <Label htmlFor="search" className="sr-only">
+                                Search
+                            </Label>
+                            <input
+                                name="search"
+                                placeholder="Search products..."
+                                data-slot="sidebar-input"
+                                data-sidebar="input"
+                                className="bg-background h-8 w-full shadow-none pl-8"
+                            />
+                            <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none" />
+                        </SidebarGroupContent>
+                    </SidebarGroup>
                 </SidebarHeader>
                 <SidebarContent className="gap-0">
                     {/* We create a collapsible SidebarGroup for each parent. */}
@@ -141,7 +152,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                         <input
                                                             type="checkbox"
                                                             id={item.id}
-                                                            name={category.title}
+                                                            name={
+                                                                category.title
+                                                            }
                                                             value={item.id}
                                                         />
                                                         {item.label}
@@ -172,6 +185,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarRail />
             </form>
         </Sidebar>
-
     );
 }

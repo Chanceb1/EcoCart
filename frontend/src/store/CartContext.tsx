@@ -140,8 +140,6 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         updateQuantity
     };
 
-    console.log(cartContext); // temporary
-
     return (
         <CartContext.Provider value={cartContext}>
             {children}
