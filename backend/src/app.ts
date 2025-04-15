@@ -10,7 +10,7 @@ import orderRouter from './routes/ordersRouter';
 import authRouter from './routes/authRouter';
 import { authenticate, authorizeAdmin } from './middleware/auth';
 
-// use : Promise<void> to avoid type errors with async/await
+// use : Promise<void/any> to avoid type errors with async/await
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Swagger documentation route
+// Swagger documentation middleware
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // API routes

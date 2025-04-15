@@ -46,26 +46,6 @@ const seedDatabase = async () => {
     try {
         console.log('Starting to seed database...');
 
-        // Sample users
-        const sampleUsers = [
-            {
-                firstName: 'chance',
-                lastName: 'b',
-                email: 'cb@email.com',
-                password: '1234',
-                address: '123 Main St, City, State 12345',
-                role: 'user' as const
-            },
-            {
-                firstName: 'Admin',
-                lastName: 'User',
-                email: 'admin@example.com',
-                password: '1234',
-                address: '456 Admin St, City, State 12345',
-                role: 'admin' as const
-            }
-        ];
-
         // sample products
         const sampleProducts = [
             {
@@ -132,10 +112,6 @@ const seedDatabase = async () => {
                 rating: 4
             }
         ];
-
-        // Create users first
-        await User.bulkCreate(sampleUsers);
-        console.log('Sample users created successfully');
 
         // Create products
         await Product.bulkCreate(sampleProducts);
