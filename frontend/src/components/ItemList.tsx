@@ -23,7 +23,6 @@ export default function ItemList(): JSX.Element {
         []
     );
 
-    console.log({ search });
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-48">
