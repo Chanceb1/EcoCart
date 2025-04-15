@@ -102,17 +102,17 @@ export default function Header() {
                             </Link>
                         </NavigationMenuItem>
 
-                        {user?.role.includes('seller') ||
-                            (user?.role.includes('admin') && (
-                                <NavigationMenuItem>
-                                    <Link
-                                        to="/seller-dashboard"
-                                        className={transparentNavigationMenuTriggerStyle()}
-                                    >
-                                        Seller Dashboard
-                                    </Link>
-                                </NavigationMenuItem>
-                            ))}
+                        {(user?.role.includes('seller') ||
+                            user?.role.includes('admin')) && (
+                            <NavigationMenuItem>
+                                <Link
+                                    to="/seller-dashboard"
+                                    className={transparentNavigationMenuTriggerStyle()}
+                                >
+                                    Seller Dashboard
+                                </Link>
+                            </NavigationMenuItem>
+                        )}
 
                         {user?.role.includes('admin') && (
                             <NavigationMenuItem>
