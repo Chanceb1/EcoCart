@@ -6,6 +6,7 @@ import UserProgressContext from '../store/UserProgressContext';
 import useHttp from '../Hooks/useHttp';
 import Error from './ErrorPage';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const requestConfig = {
     method: 'POST',
@@ -19,6 +20,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 export default function CheckoutPage() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     const {
@@ -33,10 +35,6 @@ export default function CheckoutPage() {
         (total, item) => total + item.quantity * item.price,
         0
     );
-
-    function handleClose() {
-        userProgressCtx.hideCheckout();
-    }
 
     function handleFinish() {
         userProgressCtx.hideCheckout();
@@ -66,7 +64,7 @@ export default function CheckoutPage() {
                 <button
                     type="button"
                     className="text-gray-500 hover:text-gray-700"
-                    onClick={handleClose}
+                    onClick={() => navigate(-1)}
                 >
                     Cancel
                 </button>
