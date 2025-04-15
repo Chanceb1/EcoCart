@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 
 
 const UserAccountPage = () => {
-    const { user: authUser, token } = useAuth();
+    const { user: authUser, token, login} = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         firstName: authUser?.firstName || '',
@@ -41,7 +41,7 @@ const UserAccountPage = () => {
 
     const handleSaveClick = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/users/profile', {
+            const response = await fetch(`http://localhost:5000/api/users/${authUser?.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +55,13 @@ const UserAccountPage = () => {
             }
 
             const updatedUser = await response.json();
-            // You might want to update the auth context here with the new user data
+            
+            // Update the auth context with new user data
+            if (token) {
+                login(token, updatedUser);
+            } else {
+                setError('Authentication token is missing.');
+            }
             setIsEditing(false);
             setError(null);
         } catch (err) {
