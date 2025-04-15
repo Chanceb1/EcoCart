@@ -131,10 +131,11 @@ const seedDatabase = async () => {
                 rating: 3
             },
             {
-                name: "Smart Phone",
-                description: "Eco-conscious smartphone. High performance, planet friendly.",
+                name: 'Smart Phone',
+                description:
+                    'Eco-conscious smartphone. High performance, planet friendly.',
                 price: 699.99,
-                imageUrl: "/images/smartphone.jpg",
+                imageUrl: '/images/smartphone.jpg',
                 category: 'electronics',
                 recycle_method: 'metal',
                 rating: 4
@@ -142,11 +143,11 @@ const seedDatabase = async () => {
         ];
 
         // Create users first
-        await User.bulkCreate(sampleUsers);
+        await User.bulkCreate(sampleUsers, { individualHooks: true });
         console.log('Sample users created successfully');
 
         // Create products
-        await Product.bulkCreate(sampleProducts);
+        await Product.bulkCreate(sampleProducts, { individualHooks: true });
         console.log('Sample products created successfully');
 
         console.log('Database seeded successfully');

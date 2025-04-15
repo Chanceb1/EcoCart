@@ -1,14 +1,10 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
-import { Order } from './orderModel';
-import { User } from './userModel';
-
 
 // Add enums for categories and recycle methods
 export type ProductCategory = 'electronics' | 'storage' | 'consumables';
 
 export type RecycleMethod = 'paper' | 'metal' | 'compostable' | 'glass';
-
 
 // Update the ProductSchema interface
 export interface ProductSchema {
