@@ -1,7 +1,7 @@
-import { JSX, useRef } from 'react';
+import { JSX, useContext } from 'react';
 import Item, { ProductItem } from './Item';
 import useHttp from '../Hooks/useHttp';
-import { useSearchParams } from 'react-router-dom';
+import ProductsFilterContext from '@/store/ProductsFilterContext';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
@@ -13,11 +13,9 @@ const requestConfig = {
 };
 
 export default function ItemList(): JSX.Element {
-    const [searchParams] = useSearchParams();
-    const hasSearchParams = searchParams.toString() !== '';
-    const searchString = searchParams.get('search');
-    const filterCategories = useRef<String[]>([]);
-    const filterMethods = useRef<String[]>([]);
+    const { search, categories, recyclingMethods } = useContext(
+        ProductsFilterContext
+    );
 
     const { data: loadedItems, isLoading } = useHttp<ProductItem[]>(
         apiBaseUrl + '/api/products',
@@ -25,6 +23,7 @@ export default function ItemList(): JSX.Element {
         []
     );
 
+    console.log({ search });
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-48">
@@ -44,96 +43,30 @@ export default function ItemList(): JSX.Element {
             </div>
         );
     } else {
-        if (!hasSearchParams) {
-            return (
-                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {loadedItems.map(item => (
+        return (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {loadedItems
+                    .filter(item => {
+                        if (
+                            categories?.length &&
+                            !categories.includes(item.category)
+                        )
+                            return false;
+
+                        if (
+                            recyclingMethods?.length &&
+                            !recyclingMethods.includes(item.recycle_method)
+                        )
+                            return false;
+
+                        return item.name
+                            .toLowerCase()
+                            .includes(search.toLowerCase());
+                    })
+                    .map(item => (
                         <Item key={item.id} item={item} />
                     ))}
-                </ul>
-            );
-        } else {
-            // make lists of category filters
-            filterCategories.current = searchParams.getAll('Category');
-            filterMethods.current = searchParams.getAll('Recycle Method');
-
-            // if no category params
-            if (
-                filterCategories.current.length === 0 &&
-                filterMethods.current.length === 0
-            ) {
-                // no search string
-                if (!searchString || searchString == '') {
-                    return (
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {loadedItems.map(item => (
-                                <Item key={item.id} item={item} />
-                            ))}
-                        </ul>
-                    );
-                } else {
-                    return (
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {loadedItems.map(item => {
-                                if (
-                                    item.name
-                                        .toLowerCase()
-                                        .includes(searchString.toLowerCase())
-                                ) {
-                                    return <Item key={item.id} item={item} />;
-                                }
-                            })}
-                        </ul>
-                    );
-                }
-                // at least one category param
-            } else {
-                // no search string, use category params
-                if (!searchString || searchString == '') {
-                    return (
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {loadedItems.map(item => {
-                                if (
-                                    (filterCategories.current &&
-                                        filterCategories.current.includes(
-                                            item.category
-                                        )) ||
-                                    (filterMethods.current &&
-                                        filterMethods.current.includes(
-                                            item.recycle_method
-                                        ))
-                                ) {
-                                    return <Item key={item.id} item={item} />;
-                                }
-                            })}
-                        </ul>
-                    );
-                } else {
-                    // use search string and category params
-                    console.log(searchString);
-                    return (
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {loadedItems.map(item => {
-                                if (
-                                    item.name
-                                        .toLowerCase()
-                                        .includes(searchString.toLowerCase()) ||
-                                    (filterCategories.current &&
-                                        filterCategories.current.includes(
-                                            item.category
-                                        )) ||
-                                    (filterMethods.current &&
-                                        filterMethods.current.includes(
-                                            item.recycle_method
-                                        ))
-                                ) {
-                                    return <Item key={item.id} item={item} />;
-                                }
-                            })}
-                        </ul>
-                    );
-                }
-            }
-        }
+            </ul>
+        );
     }
 }
