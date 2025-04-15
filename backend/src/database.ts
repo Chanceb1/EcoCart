@@ -126,7 +126,7 @@ const seedDatabase = async () => {
                 name: "Smart Phone",
                 description: "Eco-conscious smartphone. High performance, planet friendly.",
                 price: 699.99,
-                imageUrl: "/images/electronics/smartphone.jpg",
+                imageUrl: "/images/smartphone.jpg",
                 category: 'electronics',
                 recycle_method: 'metal',
                 rating: 4
