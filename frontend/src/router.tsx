@@ -15,6 +15,7 @@ import TermsPage from './pages/TermsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
+import ListingPage from './pages/ListingsPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
             {
                 path: 'cart',
                 element: <CartPage />
+            },
+            {
+                path: 'listingform',
+                element: <ListingPage />
             },
             // Protected routes
             {

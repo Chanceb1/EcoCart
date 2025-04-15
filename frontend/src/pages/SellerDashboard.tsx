@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button';
 
 const SellerDashboardPage = () => {
+
     return (
         <div className="container mx-auto py-12 px-4">
             <h1 className="text-4xl font-bold text-center text-green-600 dark:text-green-400 mb-8">
@@ -13,7 +14,7 @@ const SellerDashboardPage = () => {
                         <h2 className="text-lg font-semibold">
                             Create Listing
                         </h2>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" >
                             Create
                         </Button>
                     </div>
