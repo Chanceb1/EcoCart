@@ -1,11 +1,11 @@
 import { JSX, useContext } from 'react';
 import { currencyFormatter } from '@/Utils/formatting';
 import { CartContext } from '../store/CartContext';
-import { useParams, Link} from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import useHttp from '../Hooks/useHttp';
-import { Item } from '@/components/Item';
+import { ProductItem } from '@/components/Item';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
@@ -25,7 +25,7 @@ export default function ProductPage(): JSX.Element {
         data: product,
         isLoading,
         error
-    } = useHttp<Item>(apiBaseUrl + `/api/products/${id}`, requestConfig);
+    } = useHttp<ProductItem>(apiBaseUrl + `/api/products/${id}`, requestConfig);
 
     if (isLoading) {
         return (
@@ -62,7 +62,7 @@ export default function ProductPage(): JSX.Element {
             price: product!.price,
             quantity: 1
         });
-        
+
         navigate('/cart');
     }
 
