@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { useNavigate } from 'react-router-dom';
 import Users from '@/assets/usersicon.png';
 import Listings from '@/assets/listings.png'
 import Analytics from '@/assets/analytics.png'
 
 const AdminDashboardPage = () => {
+
+    const navigate = useNavigate();
+
     return (
       <div className="container mx-auto py-12 px-4">
         <h1 className="text-4xl font-bold text-green-600 text-left mb-8">
@@ -24,7 +27,7 @@ const AdminDashboardPage = () => {
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 View, edit, or deactivate existing EcoCart Seller accounts.
               </p>
-              <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+              <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => navigate('/manage-users')}>
                 Manage
               </Button>
             </div>
