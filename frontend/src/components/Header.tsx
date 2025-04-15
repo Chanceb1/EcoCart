@@ -1,9 +1,9 @@
-'use client';
-
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils.ts';
 // import { Icons } from '@/components/icons';
+import { useAuth } from '@/contexts/AuthContext.tsx';
+
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -55,7 +55,14 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export default function Header() {
-    // Add this custom function inside the component
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/'); // Navigate to home page after logout
+    };
+
     const transparentNavigationMenuTriggerStyle = () => {
         return cn(
             "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
@@ -130,12 +137,21 @@ export default function Header() {
                     >
                         Cart
                     </Link>
-                    <Link
-                        to="/login"
-                        className={transparentNavigationMenuTriggerStyle()}
-                    >
-                        Login
-                    </Link>
+                    {isAuthenticated ? (
+                        <button
+                            onClick={handleLogout}
+                            className={transparentNavigationMenuTriggerStyle()}
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <Link
+                            to="/login"
+                            className={transparentNavigationMenuTriggerStyle()}
+                        >
+                            Login
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
