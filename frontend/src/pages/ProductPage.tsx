@@ -99,7 +99,7 @@ export default function ProductPage(): JSX.Element {
                                     {`Rating: ${product.rating}/5`}
                                 </p>
                             </div>
-                            <div className="mt-2 align-text-center p-4 pt-2 text-left bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl">
+                            <div className="mt-2 align-text-center p-4 pt-2 text-left bg-gray-100 dark:bg-gray-800 rounded-2xl">
                                 {product.description}
                             </div>
                         </div>
@@ -111,7 +111,7 @@ export default function ProductPage(): JSX.Element {
                         {currencyFormatter.format(product.price)}
                     </h3>
                     <div className="flex flex-col justify-center">
-                        <div className="mt-1 m-2 h-48 overflow-hidden align-text-top p-2 text-left bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl">
+                        <div className="mt-1 m-2 h-48 overflow-hidden align-text-top p-2 text-left bg-gray-100 dark:bg-gray-800 rounded-2xl">
                             Seller Shipping Info
                         </div>
                         <Button
