@@ -22,7 +22,7 @@ export const initDatabase = async () => {
         setupAssociations();
 
         // Sync all models
-        await sequelize.sync({ force: true });
+        await sequelize.sync({ alter: true });
         console.log('Database synced successfully');
 
         const userCount = await User.count();

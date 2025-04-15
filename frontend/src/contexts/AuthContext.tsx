@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface User {
     id: number;
@@ -22,6 +22,25 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
+
+    // Add this useEffect to load stored auth state on mount
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        
+        if (storedToken && storedUser) {
+            try {
+                const parsedUser = JSON.parse(storedUser);
+                setToken(storedToken);
+                setUser(parsedUser);
+            } catch (error) {
+                // If JSON parsing fails, clear localStorage
+                console.error('Error parsing stored user:', error);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        }
+    }, []);
 
     const login = (token: string, user: User) => {
         setToken(token);

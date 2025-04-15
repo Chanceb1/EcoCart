@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/';
 
 const UserAccountPage = () => {
     const { user: authUser, token, login } = useAuth();
