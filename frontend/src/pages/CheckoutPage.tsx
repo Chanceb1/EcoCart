@@ -29,7 +29,7 @@ export default function CheckoutPage() {
         error,
         sendRequest,
         clearData
-    } = useHttp(apiBaseUrl + '/api/orders/orders', requestConfig);
+    } = useHttp(apiBaseUrl + '/api/orders', requestConfig);
 
     const cartTotal = cartCtx.items.reduce(
         (total, item) => total + item.quantity * item.price,
