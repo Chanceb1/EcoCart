@@ -6,27 +6,22 @@ import { User } from './userModel';
 export interface OrderSchema {
     id?: number;
     userId: number;
-    totalAmount: number;
     status: 'pending' | 'completed' | 'cancelled';
     orderDate: Date;
     shippingAddress: string;
-    products?: Array<{
-        productId: number;
-        quantity: number;
-        price: number;
-    }>;
+    products: string; // `${id}:${quantity},...`
 }
 
 // Define the Order model
 export class Order extends Model<OrderSchema> implements OrderSchema {
     public id!: number;
     public userId!: number;
-    public totalAmount!: number;
     public status!: 'pending' | 'completed' | 'cancelled';
     public orderDate!: Date;
     public shippingAddress!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+    public products!: string;
 }
 
 // Initialize the Order model
@@ -45,10 +40,6 @@ Order.init(
                 key: 'id'
             }
         },
-        totalAmount: {
-            type: DataTypes.DECIMAL(10, 2),
-            allowNull: false
-        },
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
             allowNull: false,
@@ -60,6 +51,10 @@ Order.init(
             defaultValue: DataTypes.NOW
         },
         shippingAddress: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        products: {
             type: DataTypes.STRING,
             allowNull: false
         }

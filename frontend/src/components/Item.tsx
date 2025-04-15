@@ -4,7 +4,7 @@ import { Button } from './ui/Button';
 import { CartContext } from '../store/CartContext';
 import { Link } from 'react-router-dom';
 
-export interface Item {
+export interface ProductItem {
     id: number;
     name: string;
     price: number;
@@ -18,7 +18,7 @@ export interface Item {
 }
 
 interface ItemProps {
-    item: Item;
+    item: ProductItem;
 }
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
