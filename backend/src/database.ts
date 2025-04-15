@@ -63,6 +63,14 @@ const seedDatabase = async () => {
                 password: '1234',
                 address: '456 Admin St, City, State 12345',
                 role: 'admin' as const
+            },
+            {
+                firstName: 'Seller',
+                lastName: 'User',
+                email: 'seller@example.com',
+                password: '1234',
+                address: '456 Admin St, City, State 12345',
+                role: 'seller' as const
             }
         ];
 
