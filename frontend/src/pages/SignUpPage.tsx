@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
@@ -40,10 +42,10 @@ const SignupPage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/register', {
+            const response = await fetch(apiBaseUrl + '/api/auth/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     firstName: formData.firstName,
@@ -51,7 +53,7 @@ const SignupPage = () => {
                     email: formData.email,
                     password: formData.password,
                     address: formData.address
-                }),
+                })
             });
 
             const data = await response.json();
@@ -64,7 +66,9 @@ const SignupPage = () => {
             login(data.token, data.user);
             navigate('/'); // Redirect to home page
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Registration failed');
+            setError(
+                err instanceof Error ? err.message : 'Registration failed'
+            );
         } finally {
             setIsLoading(false);
         }
@@ -155,8 +159,11 @@ const SignupPage = () => {
                 </form>
 
                 <p className="text-sm text-center mt-4 text-gray-700 dark:text-gray-300">
-                    Already have an account?{" "}
-                    <Link to="/login" className="text-green-600 hover:underline">
+                    Already have an account?{' '}
+                    <Link
+                        to="/login"
+                        className="text-green-600 hover:underline"
+                    >
                         Login
                     </Link>
                 </p>

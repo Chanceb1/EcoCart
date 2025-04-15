@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -20,12 +22,12 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const response = await fetch(apiBaseUrl + '/api/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
@@ -44,7 +46,6 @@ const LoginPage = () => {
         }
     };
 
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-white">
             <div className="bg-gray-100 dark:bg-gray-800 shadow-md rounded-2xl p-8 w-full max-w-md">
@@ -60,26 +61,26 @@ const LoginPage = () => {
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <Label htmlFor="email">Email</Label>
-                    <Input 
-                        type="email" 
-                        id="email" 
-                        required 
+                    <Input
+                        type="email"
+                        id="email"
+                        required
                         placeholder="johndoe@gmail.com"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} 
+                        onChange={e => setEmail(e.target.value)}
                     />
 
                     <Label htmlFor="password">Password</Label>
-                    <Input 
-                        type="password" 
-                        id="password" 
+                    <Input
+                        type="password"
+                        id="password"
                         required
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={e => setPassword(e.target.value)}
                     />
 
-                    <Button 
-                        type="submit" 
+                    <Button
+                        type="submit"
                         className="w-full mt-4 bg-green-600 hover:bg-green-700"
                         disabled={isLoading}
                     >
@@ -88,8 +89,11 @@ const LoginPage = () => {
                 </form>
 
                 <p className="text-sm text-center mt-4 text-gray-700 dark:text-gray-300">
-                    Don't have an account?{" "}
-                    <Link to="/signup" className="text-green-600 hover:underline">
+                    Don't have an account?{' '}
+                    <Link
+                        to="/signup"
+                        className="text-green-600 hover:underline"
+                    >
                         Sign up
                     </Link>
                 </p>
@@ -97,6 +101,5 @@ const LoginPage = () => {
         </div>
     );
 };
-
 
 export default LoginPage;
