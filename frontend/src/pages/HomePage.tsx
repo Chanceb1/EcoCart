@@ -7,7 +7,7 @@ const HomePage = () => {
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <div className="relative overflow-hidden bg-gradient-to-b from-green-50 to-white">
+            <div className="relative overflow-hidden bg-gradient-to-b from-green-50 to-white dark:from-green-100 dark:to-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
                         <main className="mt-10 mx-auto max-w-screen-xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
@@ -17,12 +17,12 @@ const HomePage = () => {
                                 transition={{ duration: 0.8 }}
                                 className="sm:text-center lg:text-left"
                             >
-                                <h1 className="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
+                                <h1 className="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 dark:text-green-700 sm:text-5xl sm:leading-none md:text-6xl">
                                     Sustainable Shopping
                                     <br />
-                                    <span className="text-green-600">For a Better World</span>
+                                    <span className="text-green-600 dark:text-gray-900">For a Better World</span>
                                 </h1>
-                                <p className="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                                <p className="mt-3 text-base text-gray-600 dark:text-gray-900 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                                     Join the eco-revolution with EcoCart. Discover carefully curated sustainable products 
                                     that make a real difference for our planet's future.
                                 </p>
