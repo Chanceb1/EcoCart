@@ -9,15 +9,18 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/'
 
 interface OrderProduct {
     id: string;
+    name: string;
+    price: number;
     quantity: number;
 }
 
 interface Order {
-    id: number;
+    id: string;
     orderDate: string;
     status: 'pending' | 'completed' | 'cancelled';
-    products: string; // Format: "id:quantity,id:quantity"
     shippingAddress: string;
+    items: OrderProduct[];
+    totalPrice: number;
 }
 
 const UserAccountPage = () => {
@@ -261,17 +264,22 @@ const UserAccountPage = () => {
                                     </span>
                                 </div>
                                 <div className="text-sm">
-                                    <p><span className="font-medium">Shipping Address:</span> {order.shippingAddress}</p>
+                                    <p>
+                                        <span className="font-medium">Shipping Address:</span>{' '}
+                                        {order.shippingAddress || 'No address provided'}
+                                    </p>
                                     <p className="mt-2 font-medium">Products:</p>
-                                    <ul className="list-disc list-inside ml-2">
-                                        {order.products.split(',').map((product) => {
-                                            const [id, quantity] = product.split(':');
-                                            return (
-                                                <li key={id} className="text-gray-600">
-                                                    Product ID: {id} - Quantity: {quantity}
-                                                </li>
-                                            );
-                                        })}
+                                    <ul className="space-y-2 mt-1">
+                                        {order.items.map((item) => (
+                                            <li key={item.id} className="flex justify-between text-gray-600">
+                                                <span>{item.name} (x{item.quantity})</span>
+                                                <span>{currencyFormatter.format(item.price * item.quantity)}</span>
+                                            </li>
+                                        ))}
+                                        <li className="flex justify-between font-semibold border-t pt-2 mt-2">
+                                            <span>Total:</span>
+                                            <span>{currencyFormatter.format(order.totalPrice)}</span>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
