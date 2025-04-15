@@ -1,12 +1,15 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, User } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
-    requiredRole?: 'user' | 'admin';
+    requiredRole?: User['role'];
 }
 
-export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+    children,
+    requiredRole
+}: ProtectedRouteProps) => {
     const { isAuthenticated, user } = useAuth();
 
     if (!isAuthenticated) {

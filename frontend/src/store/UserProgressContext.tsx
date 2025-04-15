@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from 'react';
+import { JSX, ReactNode, createContext, useState } from 'react';
 
 type Progress = '' | 'cart' | 'checkout';
 

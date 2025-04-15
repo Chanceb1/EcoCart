@@ -8,7 +8,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ErrorPage from './pages/ErrorPage';
 import ContactPage from './pages/ContactPage';
-import UserAccountPage from './pages/UserAccountPage';
+import UserAccountPage from './pages/userAccountPage';
 import SellerDashboard from './pages/SellerDashboard';
 import PrivacyPolicy from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -16,7 +16,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-
 
 export const router = createBrowserRouter([
     {
@@ -85,7 +84,7 @@ export const router = createBrowserRouter([
             {
                 path: 'seller-dashboard',
                 element: (
-                    <ProtectedRoute requiredRole="admin">
+                    <ProtectedRoute requiredRole="seller">
                         <SellerDashboard />
                     </ProtectedRoute>
                 )
@@ -97,7 +96,7 @@ export const router = createBrowserRouter([
                         <CheckoutPage />
                     </ProtectedRoute>
                 )
-            },
+            }
         ]
     }
 ]);
