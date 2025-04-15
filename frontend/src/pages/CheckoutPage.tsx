@@ -5,6 +5,7 @@ import { currencyFormatter } from '../Utils/formatting';
 import UserProgressContext from '../store/UserProgressContext';
 import useHttp from '../Hooks/useHttp';
 import Error from './ErrorPage';
+import { useAuth } from '@/contexts/AuthContext';
 
 const requestConfig = {
     method: 'POST',
@@ -18,6 +19,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 export default function CheckoutPage() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
+    const { user } = useAuth();
 
     const {
         data,
@@ -46,13 +48,13 @@ export default function CheckoutPage() {
         event.preventDefault();
 
         const fd = new FormData(event.currentTarget);
-        const customerData = Object.fromEntries(fd.entries()); // { email: test@example.com}
 
         sendRequest(
             JSON.stringify({
                 order: {
                     items: cartCtx.items,
-                    customer: customerData
+                    userId: user!.id,
+                    shippingAddress: ''
                 }
             })
         );
@@ -94,86 +96,7 @@ export default function CheckoutPage() {
                 className="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                 onSubmit={handleSubmit}
             >
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="name"
-                    >
-                        Name
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Your Name"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="email"
-                    >
-                        Email
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="Your Email"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="street"
-                    >
-                        Street
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="street"
-                        name="street"
-                        type="text"
-                        placeholder="Your Street"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="postal-code"
-                    >
-                        Postal Code
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="postal-code"
-                        name="postal-code"
-                        type="text"
-                        placeholder="Your Postal Code"
-                        required
-                    />
-                </div>
-                <div className="mb-6">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="city"
-                    >
-                        City
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="city"
-                        name="city"
-                        type="text"
-                        placeholder="Your City"
-                        required
-                    />
-                </div>
+                <h1 className="text-xl mb-6">Confirm Order</h1>
                 <div className="mb-6">
                     <h2 className="block text-gray-700 text-sm font-bold mb-2">
                         Total Amount: {currencyFormatter.format(cartTotal)}
