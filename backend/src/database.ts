@@ -46,6 +46,34 @@ const seedDatabase = async () => {
     try {
         console.log('Starting to seed database...');
 
+        // Sample users
+        const sampleUsers = [
+            {
+                firstName: 'chance',
+                lastName: 'b',
+                email: 'cb@email.com',
+                password: '1234',
+                address: '123 Main St, City, State 12345',
+                role: 'user' as const
+            },
+            {
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@example.com',
+                password: '1234',
+                address: '456 Admin St, City, State 12345',
+                role: 'admin' as const
+            },
+            {
+                firstName: 'Seller',
+                lastName: 'User',
+                email: 'seller@example.com',
+                password: '1234',
+                address: '456 Admin St, City, State 12345',
+                role: 'seller' as const
+            }
+        ];
+
         // sample products
         const sampleProducts = [
             {
@@ -77,7 +105,8 @@ const seedDatabase = async () => {
             },
             {
                 name: 'Biodegradable Phone Case',
-                description: 'Eco-friendly phone case made from biodegradable materials',
+                description:
+                    'Eco-friendly phone case made from biodegradable materials',
                 price: 19.99,
                 imageUrl: '/images/phone-case.jpg',
                 category: 'electronics',
@@ -110,9 +139,14 @@ const seedDatabase = async () => {
                 imageUrl: '/images/smartphone.jpg',
                 category: 'electronics',
                 recycle_method: 'metal',
-                rating: 4
+                rating: 4,
+                stock: 3892
             }
         ];
+
+        // Create users first
+        await User.bulkCreate(sampleUsers, { individualHooks: true });
+        console.log('Sample users created successfully');
 
         // Create products
         await Product.bulkCreate(sampleProducts, { individualHooks: true });
