@@ -134,6 +134,9 @@ const SellerOrdersPage = () => {
                                 Items
                             </th>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
                                 Action
                             </th>
                         </tr>
