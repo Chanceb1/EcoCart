@@ -41,7 +41,7 @@ const UserAccountPage = () => {
     // fetch orders when component mounts
     useEffect(() => {
         const fetchOrders = async () => {
-            if (authUser && authUser.role === 'user') {
+            if (authUser) {
                 setOrderLoading(true);
                 try {
                     const response = await fetch(
