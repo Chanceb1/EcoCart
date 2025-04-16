@@ -62,7 +62,9 @@ export default function CheckoutPage() {
                 >
                     Cancel
                 </button>
-                <Button>Submit Order</Button>
+                <Button className="bg-green-600 dark:bg-gray-900">
+                    Submit Order
+                </Button>
             </div>
         </>
     );
@@ -88,11 +90,22 @@ export default function CheckoutPage() {
                 onSubmit={handleSubmit}
             >
                 <h1 className="text-xl mb-6">Confirm Order</h1>
-                <div className="mb-6">
-                    <h2 className="block text-gray-700 text-sm font-bold mb-2">
+                <div className="ml-4">
+                {cartCtx.items.map(item => (
+                    <div className=" grid grid-cols-3 gap-4 border-b-2 mb-6 border-dashed">
+                    <p className="col-span-2">
+                        {item.name}
+                    </p>
+                    <p className="text-right">
+                    {currencyFormatter.format(item.price)}
+                    </p>
+                </div>
+                ))}
+                </div>
+                    <h2 className="text-right text-xl block text-gray-700 font-bold mb-2">
                         Total Amount: {currencyFormatter.format(cartTotal)}
                     </h2>
-                </div>
+                
                 {actions}
             </form>
         </div>

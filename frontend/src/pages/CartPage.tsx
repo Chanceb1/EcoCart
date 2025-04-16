@@ -32,7 +32,7 @@ export default function CartPage() {
                             >
                                 <span>
                                     {item.name}{' '}
-                                    <Badge className="ml-2">
+                                    <Badge className="ml-2 bg-green-100 text-black dark:bg-green-800 dark:text-gray-900">
                                         ${item.price}
                                     </Badge>
                                 </span>
@@ -78,11 +78,11 @@ export default function CartPage() {
                 <div className="flex justify-between items-center">
                     <Button
                         disabled={!cartCtx.items.length}
-                        className="mt-4 px-8"
+                        className="mt-4 px-8 bg-green-600 dark:bg-gray-900"
                     >
                         <Link to="/checkout">Proceed to Checkout</Link>
                     </Button>
-                    <p className="mt-4 font-bold">
+                    <p className="mt-4 font-bold text-xl">
                         Total: {currencyFormatter.format(cartTotal)}
                     </p>
                 </div>

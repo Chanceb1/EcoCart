@@ -124,13 +124,18 @@ interface OrderResponse {
  */
 orderRouter.get(
     '/user/:userId',
+    authenticate,
     async (req: Request, res: Response): Promise<any> => {
         try {
-            const userId = parseInt(req.params.userId);
+            if (req.user!.id !== Number(req.params.userId)) {
+                return void res
+                    .status(404)
+                    .json({ message: 'You can only check your own orders' });
+            }
 
             // Find all orders for the user
             const orders = await Order.findAll({
-                where: { userId },
+                where: { userId: req.user!.id },
                 order: [['orderDate', 'DESC']]
             });
 
