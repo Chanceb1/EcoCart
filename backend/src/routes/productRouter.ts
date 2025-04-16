@@ -43,15 +43,28 @@ const productRouter = express.Router();
  *       500:
  *         description: Failed to retrieve products
  */
-productRouter.get('/', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const products = await Product.findAll();
-        res.status(200).json(products);
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).json({ message: 'Failed to retrieve products' });
+productRouter.get(
+    '/',
+    authenticate,
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            if (req.user?.role === 'admin') {
+                res.status(200).json(await Product.findAll());
+            } else if (req.user?.role === 'seller') {
+                res.status(200).json(
+                    await Product.findAll({ where: { sellerId: req.user?.id } })
+                );
+            } else {
+                return void res.status(404).json({
+                    message: 'You do not have permission to check products'
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            res.status(500).json({ message: 'Failed to retrieve products' });
+        }
     }
-});
+);
 
 // Route to get a product by ID
 /**
