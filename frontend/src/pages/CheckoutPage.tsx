@@ -8,27 +8,28 @@ import Error from './ErrorPage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const requestConfig = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-};
-
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 export default function CheckoutPage() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+
+    const requestConfig = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+
+            Authorization: 'Bearer ' + token
+        }
+    };
 
     const {
         data,
         isLoading: isSending,
         error,
-        sendRequest,
-        clearData
+        sendRequest
     } = useHttp(apiBaseUrl + '/api/orders', requestConfig);
 
     const cartTotal = cartCtx.items.reduce(
@@ -36,26 +37,19 @@ export default function CheckoutPage() {
         0
     );
 
-    function handleFinish() {
-        userProgressCtx.hideCheckout();
-        cartCtx.clearCart();
-        clearData();
-    }
-
-    function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const fd = new FormData(event.currentTarget);
-
-        sendRequest(
+        await sendRequest(
             JSON.stringify({
                 order: {
                     items: cartCtx.items,
-                    userId: user!.id,
                     shippingAddress: ''
                 }
             })
         );
+
+        cartCtx.clearCart();
     }
 
     let actions = (
@@ -81,7 +75,6 @@ export default function CheckoutPage() {
         return (
             <div className="text-center">
                 <h2>Order submitted successfully!</h2>
-                <button onClick={handleFinish}>Okay</button>
             </div>
         );
     }
