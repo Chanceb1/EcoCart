@@ -34,7 +34,10 @@ const SellerDashboardPage = () => {
                 <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex">
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold">View Orders</h2>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/seller-orders')}
+                        >
                             View
                         </Button>
                     </div>
