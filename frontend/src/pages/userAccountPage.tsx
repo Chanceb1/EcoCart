@@ -35,44 +35,44 @@ const UserAccountPage = () => {
     const [error, setError] = useState<string | null>(null);
     // for user orders
     const [orders, setOrders] = useState<Order[]>([]);
-    const [orderLoading, setOrderLoading] = useState(false);
+    const [orderLoading, setOrderLoading] = useState(true); // Set initial loading state to true
     const [orderError, setOrderError] = useState<string | null>(null);
 
-
-    // fetch orders when component mounts
     useEffect(() => {
         const fetchOrders = async () => {
-            if (authUser && authUser.role === 'user') {
-                setOrderLoading(true);
-                try {
-                    const response = await fetch(
-                        `${apiBaseUrl}api/orders/user/${authUser.id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
+            if (!authUser || authUser.role !== 'user') {
+                setOrderLoading(false); // Make sure to set loading false if we're not fetching
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${apiBaseUrl}api/orders/user/${authUser.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
                         }
-                    );
-
-                    if (response.status === 404) {
-                        setOrders([]);
-                        setOrderError(null);
-                        return;
                     }
+                );
 
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch orders');
-                    }
+                const data = await response.json();
 
-                    const data = await response.json();
-                    setOrders(data);
-                } catch (err) {
-                    setOrderError(
-                        err instanceof Error ? err.message : 'Failed to fetch orders'
-                    );
-                } finally {
-                    setOrderLoading(false);
+                if (response.status === 404) {
+                    setOrders([]);
+                    setOrderError(null);
+                } else if (!response.ok) {
+                    throw new Error('Failed to fetch orders');
+                } else {
+                    setOrders(Array.isArray(data) ? data : []);
+                    setOrderError(null);
                 }
+            } catch (err) {
+                setOrderError(
+                    err instanceof Error ? err.message : 'Failed to fetch orders'
+                );
+                setOrders([]);
+            } finally {
+                setOrderLoading(false);
             }
         };
 
