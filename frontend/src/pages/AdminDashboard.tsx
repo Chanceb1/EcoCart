@@ -73,7 +73,10 @@ const AdminDashboardPage = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-300">
                             View orders made between Seller and Consumers.
                         </p>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/seller-orders')}
+                        >
                             View
                         </Button>
                     </div>

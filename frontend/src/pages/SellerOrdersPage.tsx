@@ -92,7 +92,7 @@ const SellerOrdersPage = () => {
     return (
         <div className="container mx-auto px-4 py-10">
             <h1 className="text-4xl font-extrabold text-green-600 text-center mb-10">
-                Orders
+                {authUser?.role === 'admin' ? 'All' : 'Your'} Orders
             </h1>
 
             <div className="bg-white shadow-xl rounded-2xl overflow-hidden">

@@ -252,7 +252,11 @@ orderRouter.get(
                             const product = await Product.findByPk(productId);
 
                             if (product) {
-                                if (product.sellerId !== req.user?.id) continue;
+                                if (
+                                    req.user?.role !== 'admin' &&
+                                    product.sellerId !== req.user?.id
+                                )
+                                    continue;
 
                                 const itemTotal =
                                     product.price * parseInt(quantity);
