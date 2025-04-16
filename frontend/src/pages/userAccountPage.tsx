@@ -107,7 +107,7 @@ const UserAccountPage = () => {
     const handleSaveClick = async () => {
         try {
             const response = await fetch(
-                `${apiBaseUrl}/api/users/user/${authUser?.id}`,
+                `${apiBaseUrl}/api/users/${authUser?.id}`,
                 {
                     method: 'PUT',
                     headers: {
