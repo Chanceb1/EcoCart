@@ -54,6 +54,12 @@ const UserAccountPage = () => {
                         }
                     );
 
+                    if (response.status === 404) {
+                        setOrders([]);
+                        setOrderError(null);
+                        return;
+                    }
+
                     if (!response.ok) {
                         throw new Error('Failed to fetch orders');
                     }
@@ -243,7 +249,7 @@ const UserAccountPage = () => {
                         {orders.map((order) => (
                             <div
                                 key={order.id}
-                                className="border rounded-lg p-4 hover:bg-gray-50"
+                                className="border rounded-lg p-4"
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
