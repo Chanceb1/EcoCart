@@ -16,6 +16,7 @@ interface Product {
 interface Order {
     id: string;
     userId: number;
+    userEmail: string;
     orderDate: Date;
     status: string;
     shippingAddress: string;
@@ -96,7 +97,7 @@ const SellerOrdersPage = () => {
 
             <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
                 <table className="min-w-full text-left text-sm text-gray-700">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-gray-50 border-b border-gray-200 dark:text-black dark:bg-gray-300 dark:border-gray-300">
                         <tr>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
                                 User ID
@@ -105,34 +106,31 @@ const SellerOrdersPage = () => {
                                 Shipping Address
                             </th>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
-                                Item ID
-                            </th>
-                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
-                                Quantity
+                                Items
                             </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {orderData.map((order, orderIndex) => (
                             <>
-                                <div>Order {order.id}</div>
-                                {order.items.map((item, itemIndex) => (
-                                    <tr
-                                        key={`${orderIndex}-${itemIndex}`}
-                                        className="hover:bg-gray-50 transition-colors"
-                                    >
-                                        <td className="px-6 py-4">
-                                            {order.userId}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {order.shippingAddress}
-                                        </td>
-                                        <td className="px-6 py-4">{item.id}</td>
-                                        <td className="px-6 py-4">
-                                            {item.quantity}
-                                        </td>
-                                    </tr>
-                                ))}
+                                <tr className="hover:bg-gray-50 transition-colors">
+                                    <td className="px-6 py-4">
+                                        {order.userId}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {order.shippingAddress}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {order.items.map(
+                                            (product, productIndex) => (
+                                                <div>
+                                                    {product.quantity}x -{' '}
+                                                    {product.name}
+                                                </div>
+                                            )
+                                        )}
+                                    </td>
+                                </tr>
                             </>
                         ))}
                     </tbody>

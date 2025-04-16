@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import Order from '../models/orderModel';
 import Product from '../models/productModel';
 import { authenticate } from '../middleware/auth';
+import User from '../models/userModel';
 
 const orderRouter = express.Router();
 
@@ -96,6 +97,7 @@ interface OrderProduct {
 interface OrderResponse {
     id: string;
     userId?: number;
+    userEmail?: string;
     orderDate: Date;
     status: string;
     shippingAddress: string;
@@ -268,6 +270,8 @@ orderRouter.get(
                         return {
                             id: order.id.toString(), // Convert to string explicitly
                             userId: order.userId,
+                            userEmail: (await User.findByPk(order.userId))!
+                                .email,
                             orderDate: order.orderDate,
                             status: order.status,
                             shippingAddress: order.shippingAddress,

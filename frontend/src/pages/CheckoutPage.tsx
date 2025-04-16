@@ -44,7 +44,7 @@ export default function CheckoutPage() {
             JSON.stringify({
                 order: {
                     items: cartCtx.items,
-                    shippingAddress: ''
+                    shippingAddress: user?.address
                 }
             })
         );
@@ -91,21 +91,23 @@ export default function CheckoutPage() {
             >
                 <h1 className="text-xl mb-6">Confirm Order</h1>
                 <div className="ml-4">
-                {cartCtx.items.map(item => (
-                    <div className=" grid grid-cols-3 gap-4 border-b-2 mb-6 border-dashed">
-                    <p className="col-span-2">
-                        {item.name} x{item.quantity}
-                    </p>
-                    <p className="text-right">
-                    {currencyFormatter.format(item.price * item.quantity)}
-                    </p>
+                    {cartCtx.items.map(item => (
+                        <div className=" grid grid-cols-3 gap-4 border-b-2 mb-6 border-dashed">
+                            <p className="col-span-2">
+                                {item.name} x{item.quantity}
+                            </p>
+                            <p className="text-right">
+                                {currencyFormatter.format(
+                                    item.price * item.quantity
+                                )}
+                            </p>
+                        </div>
+                    ))}
                 </div>
-                ))}
-                </div>
-                    <h2 className="text-right text-xl block text-gray-700 font-bold mb-2">
-                        Total Amount: {currencyFormatter.format(cartTotal)}
-                    </h2>
-                
+                <h2 className="text-right text-xl block text-gray-700 font-bold mb-2">
+                    Total Amount: {currencyFormatter.format(cartTotal)}
+                </h2>
+
                 {actions}
             </form>
         </div>
