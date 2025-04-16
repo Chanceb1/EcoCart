@@ -14,17 +14,27 @@ const userRouter = express.Router();
  *       200:
  *         description: List of users
  */
-userRouter.get('/', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const users = await User.findAll({
-            attributes: { exclude: ['password'] } // Don't send passwords
-        });
-        res.status(200).json(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Failed to load users.' });
+userRouter.get(
+    '/',
+    authenticate,
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            if (req.user!.role !== 'admin') {
+                return void res.status(401).json({
+                    message: 'You do not have permission to list all users'
+                });
+            }
+
+            const users = await User.findAll({
+                attributes: { exclude: ['password'] } // Don't send passwords
+            });
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            res.status(500).json({ message: 'Failed to load users.' });
+        }
     }
-});
+);
 
 /**
  * @swagger
