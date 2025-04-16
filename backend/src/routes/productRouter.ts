@@ -259,9 +259,11 @@ productRouter.post(
  */
 productRouter.put(
     '/:id',
+    authenticate,
     async (req: Request, res: Response): Promise<void> => {
         try {
             const productId = req.params.id;
+
             const { name, description, price, imageUrl } = req.body;
 
             // Validate input
@@ -271,6 +273,15 @@ productRouter.put(
             }
 
             const product = await Product.findByPk(productId);
+
+            if (
+                req.user?.role !== 'admin' &&
+                req.user?.id !== product?.sellerId
+            ) {
+                return void res
+                    .status(404)
+                    .json({ message: 'You can only edit your own products' });
+            }
 
             if (!product) {
                 res.status(404).json({ message: 'Product not found' });
@@ -323,10 +334,20 @@ productRouter.put(
  */
 productRouter.delete(
     '/:id',
+    authenticate,
     async (req: Request, res: Response): Promise<void> => {
         try {
             const productId = req.params.id;
             const product = await Product.findByPk(productId);
+
+            if (
+                req.user?.role !== 'admin' &&
+                req.user?.id !== product?.sellerId
+            ) {
+                return void res
+                    .status(404)
+                    .json({ message: 'You can only delete your own products' });
+            }
 
             if (!product) {
                 res.status(404).json({ message: 'Product not found' });
