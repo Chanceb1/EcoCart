@@ -74,12 +74,20 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'manage-users',
-                element: <UserManagementPage />
+                element: (
+                    <ProtectedRoute requiredRole="admin">
+                        {' '}
+                        <UserManagementPage />
+                    </ProtectedRoute>
+                )
             },
             {
                 path: 'seller-orders',
-                element: <SellerOrdersPage />
-
+                element: (
+                    <ProtectedRoute requiredRole={['seller', 'admin']}>
+                        <SellerOrdersPage />
+                    </ProtectedRoute>
+                )
             },
             // Protected routes
             {
