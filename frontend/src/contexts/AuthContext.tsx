@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useEffect
+} from 'react';
 
 export interface User {
     id: number;
@@ -23,11 +29,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
-    // Add this useEffect to load stored auth state on mount
-    useEffect(() => {
+    const loadAuth = () => {
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
-        
+
         if (storedToken && storedUser) {
             try {
                 const parsedUser = JSON.parse(storedUser);
@@ -40,7 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 localStorage.removeItem('user');
             }
         }
-    }, []);
+    };
+
+    // Add this useEffect to load stored auth state on mount
+    useEffect(loadAuth, []);
 
     const login = (token: string, user: User) => {
         setToken(token);
@@ -55,6 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
     };
+
+    if (token === null) loadAuth();
 
     const value = {
         user,
