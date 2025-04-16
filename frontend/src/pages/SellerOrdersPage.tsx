@@ -11,12 +11,14 @@ export interface OrderItem {
     quantity: number;
 }
 
+export interface Order {
+    userId: number;
+    shippingAddress: string;
+    items: OrderItem[];
+}
+
 export interface OrderResponse {
-    order: {
-        userId: number;
-        shippingAddress: string;
-        items: OrderItem[];
-    };
+    orders: Order[];
 }
 
 const SellerOrdersPage = () => {
@@ -84,8 +86,6 @@ const SellerOrdersPage = () => {
         );
     }
 
-    const { userId, shippingAddress, items } = orderData.order;
-
     return (
         <div className="container mx-auto px-4 py-10">
             <h1 className="text-4xl font-extrabold text-green-600 text-center mb-10">
@@ -103,14 +103,16 @@ const SellerOrdersPage = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {items.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 transition-colors">
-                                <td className="px-6 py-4">{userId}</td>
-                                <td className="px-6 py-4">{shippingAddress}</td>
-                                <td className="px-6 py-4">{item.id}</td>
-                                <td className="px-6 py-4">{item.quantity}</td>
-                            </tr>
-                        ))}
+                        {orderData.orders.map((order, orderIndex) =>
+                            order.items.map((item, itemIndex) => (
+                                <tr key={`${orderIndex}-${itemIndex}`} className="hover:bg-gray-50 transition-colors">
+                                    <td className="px-6 py-4">{order.userId}</td>
+                                    <td className="px-6 py-4">{order.shippingAddress}</td>
+                                    <td className="px-6 py-4">{item.id}</td>
+                                    <td className="px-6 py-4">{item.quantity}</td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
