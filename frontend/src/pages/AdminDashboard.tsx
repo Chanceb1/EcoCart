@@ -51,7 +51,10 @@ const AdminDashboardPage = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-300">
                             Review incoming listings from EcoCart Sellers.
                         </p>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/inventory')}
+                        >
                             Review
                         </Button>
                     </div>
