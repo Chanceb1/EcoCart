@@ -38,7 +38,8 @@ Order.init(
             references: {
                 model: User,
                 key: 'id'
-            }
+            },
+            onDelete: 'cascade'
         },
         status: {
             type: DataTypes.ENUM('pending', 'completed', 'cancelled'),

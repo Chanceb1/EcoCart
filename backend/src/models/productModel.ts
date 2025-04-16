@@ -81,7 +81,8 @@ Product.init(
             references: {
                 model: User,
                 key: 'id'
-            }
+            },
+            onDelete: 'cascade'
         }
     },
     {

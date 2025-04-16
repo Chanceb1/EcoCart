@@ -1,22 +1,19 @@
 import { User } from './userModel';
 import { Order } from './orderModel';
 import { Product } from './productModel';
+import { setDefaultResultOrder } from 'dns';
 
 export const setupAssociations = () => {
     // Order associations
     Order.belongsTo(User, {
         foreignKey: 'userId',
-        as: 'user'
+        as: 'user',
+        onDelete: 'cascade'
     });
 
-    User.hasMany(Order, {
-        foreignKey: 'userId',
-        as: 'orders'
-    });
-
-    Product.belongsToMany(Order, {
-        through: 'OrderProducts',
-        as: 'productOrders',
-        foreignKey: 'productId'
+    Product.belongsTo(User, {
+        foreignKey: 'sellerId',
+        as: 'user',
+        onDelete: 'cascade'
     });
 };
