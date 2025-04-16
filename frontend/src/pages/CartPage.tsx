@@ -4,17 +4,15 @@ import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CartContext, { CartItem } from '@/store/CartContext';
+import { currencyFormatter } from '@/Utils/formatting';
 
 export default function CartPage() {
     const cartCtx = useContext(CartContext);
 
-    const totalPrice =
-        Math.ceil(
-            cartCtx.items.reduce(
-                (acc, item) => acc + item.price * item.quantity,
-                0
-            ) * 100
-        ) / 100;
+    const cartTotal = cartCtx.items.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+    );
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
@@ -84,7 +82,9 @@ export default function CartPage() {
                     >
                         <Link to="/checkout">Proceed to Checkout</Link>
                     </Button>
-                    <p className="mt-4 font-bold">Total: ${totalPrice}</p>
+                    <p className="mt-4 font-bold">
+                        Total: {currencyFormatter.format(cartTotal)}
+                    </p>
                 </div>
             </div>
         </div>

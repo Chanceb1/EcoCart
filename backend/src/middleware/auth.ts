@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { User } from '../models/userModel';
 import jwt from 'jsonwebtoken';
 
-
 // Middleware to authenticate JWT token
 interface JwtPayload {
     id: number;
@@ -27,7 +26,9 @@ export const authenticate = async (
         const token = req.header('Authorization')?.replace('Bearer ', '');
 
         if (!token) {
-            return res.status(401).json({ message: 'Authentication required' });
+            return void res
+                .status(401)
+                .json({ message: 'Authentication required' });
         }
 
         const decoded = jwt.verify(
