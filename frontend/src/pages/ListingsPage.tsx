@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
@@ -14,7 +15,8 @@ const Listing = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [category, setCategory] = useState('');
     const [recycleMethod, setRecycleMethod] = useState('');
-    
+    const { token } = useAuth();
+
     const [successMessage, setSuccessMessage] = useState('');
     const [error, setError] = useState('');
 
@@ -28,6 +30,7 @@ const Listing = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token
                 },
                 body: JSON.stringify({
                     name,
@@ -37,7 +40,7 @@ const Listing = () => {
                     recycle_method: recycleMethod,
                     imageUrl,
                     rating: 0
-                }),
+                })
             });
 
             const data = await response.json();
@@ -53,45 +56,83 @@ const Listing = () => {
             setCategory('');
             setRecycleMethod('');
             setImageUrl('');
-
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Submission failed');
         }
-
     };
 
     return (
         <div className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow bg-white">
-            <h2 className="text-2xl font-bold mb-4 text-center">Create a New Listing</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">
+                Create a New Listing
+            </h2>
             <form onSubmit={handleListSubmit} className="space-y-4">
                 <div>
                     <Label htmlFor="name">Product Name</Label>
-                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <Input
+                        id="name"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <Label htmlFor="price">Price ($)</Label>
-                    <Input id="price" type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required />
+                    <Input
+                        id="price"
+                        type="number"
+                        step="0.01"
+                        value={price}
+                        onChange={e => setPrice(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <Label htmlFor="description">Description</Label>
-                    <Input id="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                    <Input
+                        id="description"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <Label htmlFor="category">Category</Label>
-                    <Input id="category" value={category} onChange={(e) => setCategory(e.target.value)} required />
+                    <Input
+                        id="category"
+                        value={category}
+                        onChange={e => setCategory(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <Label htmlFor="recycleMethod">Recycle Method</Label>
-                    <Input id="recycleMethod" value={recycleMethod} onChange={(e) => setRecycleMethod(e.target.value)} required />
+                    <Input
+                        id="recycleMethod"
+                        value={recycleMethod}
+                        onChange={e => setRecycleMethod(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <Label htmlFor="imageUrl">Image URL</Label>
-                    <Input id="imageUrl" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+                    <Input
+                        id="imageUrl"
+                        value={imageUrl}
+                        onChange={e => setImageUrl(e.target.value)}
+                    />
                 </div>
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
+                <Button
+                    type="submit"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                >
                     Submit Listing
                 </Button>
-                {successMessage && <p className="text-green-600 font-semibold">{successMessage}</p>}
+                {successMessage && (
+                    <p className="text-green-600 font-semibold">
+                        {successMessage}
+                    </p>
+                )}
                 {error && <p className="text-red-600 font-semibold">{error}</p>}
             </form>
         </div>
@@ -99,8 +140,3 @@ const Listing = () => {
 };
 
 export default Listing;
-
-
-
-
-

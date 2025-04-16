@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../database';
+import User from './userModel';
 
 // Add enums for categories and recycle methods
 export type ProductCategory = 'electronics' | 'storage' | 'consumables';
@@ -16,6 +17,7 @@ export interface ProductSchema {
     category: string;
     recycle_method: string;
     rating: number;
+    sellerId: number;
 }
 
 // Define the Product model
@@ -29,6 +31,7 @@ export class Product extends Model<ProductSchema> implements ProductSchema {
     public category!: ProductCategory;
     public recycle_method!: RecycleMethod;
     public rating!: number;
+    public sellerId!: number;
 }
 
 // Initialize the Product model
@@ -53,15 +56,15 @@ Product.init(
         },
         imageUrl: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         category: {
             type: DataTypes.ENUM('electronics', 'storage', 'consumables'),
-            allowNull: false,
+            allowNull: false
         },
         recycle_method: {
             type: DataTypes.ENUM('paper', 'metal', 'compostable', 'glass'),
-            allowNull: false,
+            allowNull: false
         },
         rating: {
             type: DataTypes.INTEGER,
@@ -69,8 +72,16 @@ Product.init(
             defaultValue: 5,
             validate: {
                 min: 1,
-                max: 5,
-            },
+                max: 5
+            }
+        },
+        sellerId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: User,
+                key: 'id'
+            }
         }
     },
     {

@@ -1,15 +1,15 @@
 import express, { Request, Response } from 'express';
 import Product from '../models/productModel';
+import { authenticate } from '../middleware/auth';
 
 const productRouter = express.Router();
-
 
 /**
  * @swagger
  * /api/products:
  *   get:
  *     summary: Returns all products
- *     tags: [Products] 
+ *     tags: [Products]
  *     responses:
  *       200:
  *         description: List of products
@@ -42,7 +42,8 @@ const productRouter = express.Router();
  *                     maximum: 5
  *       500:
  *         description: Failed to retrieve products
- */productRouter.get('/', async (req: Request, res: Response): Promise<void> => {
+ */
+productRouter.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const products = await Product.findAll();
         res.status(200).json(products);
@@ -51,7 +52,6 @@ const productRouter = express.Router();
         res.status(500).json({ message: 'Failed to retrieve products' });
     }
 });
-
 
 // Route to get a product by ID
 /**
@@ -100,24 +100,25 @@ const productRouter = express.Router();
  *       500:
  *         description: Failed to retrieve product
  */
-productRouter.get('/:id', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const productId = req.params.id;
-        const product = await Product.findByPk(productId);
+productRouter.get(
+    '/:id',
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            const productId = req.params.id;
+            const product = await Product.findByPk(productId);
 
-        if (!product) {
-            res.status(404).json({ message: 'Product not found' });
-            return;
+            if (!product) {
+                res.status(404).json({ message: 'Product not found' });
+                return;
+            }
+
+            res.status(200).json(product);
+        } catch (error) {
+            console.error('Error fetching product:', error);
+            res.status(500).json({ message: 'Failed to retrieve product' });
         }
-
-        res.status(200).json(product);
-    } catch (error) {
-        console.error('Error fetching product:', error);
-        res.status(500).json({ message: 'Failed to retrieve product' });
     }
-});
-
-
+);
 
 // Route to create a new product
 /**
@@ -166,32 +167,42 @@ productRouter.get('/:id', async (req: Request, res: Response): Promise<void> => 
  *       500:
  *         description: Failed to create product
  */
-productRouter.post('/', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { name, description, price, imageUrl } = req.body;
+productRouter.post(
+    '/',
+    authenticate,
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            if (req.user?.role !== 'seller') {
+                return void res.status(401).json({
+                    message: 'You do not have permission to create products'
+                });
+            }
 
-        if (!name || !description || !price || !imageUrl) {
-            res.status(400).json({ message: 'Missing required fields' });
-            return;
+            const { name, description, price, imageUrl } = req.body;
+
+            if (!name || !description || !price || !imageUrl) {
+                res.status(400).json({ message: 'Missing required fields' });
+                return;
+            }
+
+            const newProduct = await Product.create({
+                name,
+                description,
+                price,
+                imageUrl,
+                category: 'electronics', // Default category, can be changed as needed
+                recycle_method: 'paper', // Default recycle method, can be changed as needed
+                rating: 5, // Default rating, can be changed as needed
+                sellerId: req.user.id
+            });
+
+            res.status(201).json(newProduct);
+        } catch (error) {
+            console.error('Error creating product:', error);
+            res.status(500).json({ message: 'Failed to create product' });
         }
-
-        const newProduct = await Product.create({
-            name,
-            description,
-            price,
-            imageUrl,
-            category: 'electronics', // Default category, can be changed as needed
-            recycle_method: 'paper', // Default recycle method, can be changed as needed
-            rating: 5 // Default rating, can be changed as needed
-        });
-
-        res.status(201).json(newProduct);
-    } catch (error) {
-        console.error('Error creating product:', error);
-        res.status(500).json({ message: 'Failed to create product' });
     }
-});
-
+);
 
 // Route to update a product by ID
 /**
@@ -247,44 +258,47 @@ productRouter.post('/', async (req: Request, res: Response): Promise<void> => {
  *       500:
  *         description: Failed to update product
  */
-productRouter.put('/:id', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const productId = req.params.id;
-        const { name, description, price, imageUrl } = req.body;
+productRouter.put(
+    '/:id',
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            const productId = req.params.id;
+            const { name, description, price, imageUrl } = req.body;
 
-        // Validate input
-        if (!name || !description || !price || !imageUrl) {
-            res.status(400).json({ message: 'Missing required fields' });
-            return;
+            // Validate input
+            if (!name || !description || !price || !imageUrl) {
+                res.status(400).json({ message: 'Missing required fields' });
+                return;
+            }
+
+            const product = await Product.findByPk(productId);
+
+            if (!product) {
+                res.status(404).json({ message: 'Product not found' });
+                return;
+            }
+
+            // Update the product
+            await product.update({
+                name,
+                description,
+                price,
+                imageUrl,
+                category: 'electronics', // Default category, can be changed as needed
+                recycle_method: 'metal', // Default recycle method, can be changed as needed
+                rating: 5 // Default rating, can be changed as needed
+            });
+
+            res.status(200).json({
+                message: 'Product updated successfully',
+                product
+            });
+        } catch (error) {
+            console.error('Error updating product:', error);
+            res.status(500).json({ message: 'Failed to update product' });
         }
-
-        const product = await Product.findByPk(productId);
-
-        if (!product) {
-            res.status(404).json({ message: 'Product not found' });
-            return;
-        }
-
-        // Update the product
-        await product.update({
-            name,
-            description,
-            price,
-            imageUrl,
-            category: 'electronics', // Default category, can be changed as needed
-            recycle_method: 'metal', // Default recycle method, can be changed as needed
-            rating: 5 // Default rating, can be changed as needed
-        });
-
-        res.status(200).json({ 
-            message: 'Product updated successfully', 
-            product 
-        });
-    } catch (error) {
-        console.error('Error updating product:', error);
-        res.status(500).json({ message: 'Failed to update product' });
     }
-});
+);
 
 // Route to delete a product by ID
 /**
@@ -308,26 +322,28 @@ productRouter.put('/:id', async (req: Request, res: Response): Promise<void> => 
  *       500:
  *         description: Failed to delete product
  */
-productRouter.delete('/:id', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const productId = req.params.id;
-        const product = await Product.findByPk(productId);
+productRouter.delete(
+    '/:id',
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            const productId = req.params.id;
+            const product = await Product.findByPk(productId);
 
-        if (!product) {
-            res.status(404).json({ message: 'Product not found' });
-            return;
+            if (!product) {
+                res.status(404).json({ message: 'Product not found' });
+                return;
+            }
+
+            await product.destroy();
+            res.status(200).json({
+                message: 'Product deleted successfully',
+                deletedProductId: productId
+            });
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            res.status(500).json({ message: 'Failed to delete product' });
         }
-
-        await product.destroy();
-        res.status(200).json({ 
-            message: 'Product deleted successfully',
-            deletedProductId: productId 
-        });
-    } catch (error) {
-        console.error('Error deleting product:', error);
-        res.status(500).json({ message: 'Failed to delete product' });
     }
-});
-
+);
 
 export default productRouter;
