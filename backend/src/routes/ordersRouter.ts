@@ -95,6 +95,7 @@ interface OrderProduct {
 
 interface OrderResponse {
     id: string;
+    userId?: number;
     orderDate: Date;
     status: string;
     shippingAddress: string;
@@ -266,6 +267,7 @@ orderRouter.get(
 
                         return {
                             id: order.id.toString(), // Convert to string explicitly
+                            userId: order.userId,
                             orderDate: order.orderDate,
                             status: order.status,
                             shippingAddress: order.shippingAddress,

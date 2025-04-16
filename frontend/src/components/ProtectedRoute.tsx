@@ -6,15 +6,22 @@ interface ProtectedRouteProps {
     requiredRole?: string | string[];
 }
 
-export const ProtectedRoute = ({ children, requiredRole}: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+    children,
+    requiredRole
+}: ProtectedRouteProps) => {
     const { isAuthenticated, user } = useAuth();
+
+    console.log({ isAuthenticated, user });
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
     }
 
     if (requiredRole) {
-        const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+        const allowedRoles = Array.isArray(requiredRole)
+            ? requiredRole
+            : [requiredRole];
         if (!user?.role || !allowedRoles.includes(user.role)) {
             return <Navigate to="/" />;
         }

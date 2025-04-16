@@ -6,25 +6,27 @@ import { currencyFormatter } from '@/Utils/formatting';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
-export interface OrderItem {
+interface Product {
     id: string;
+    name: string;
+    price: number;
     quantity: number;
 }
 
-export interface Order {
+interface Order {
+    id: string;
     userId: number;
+    orderDate: Date;
+    status: string;
     shippingAddress: string;
-    items: OrderItem[];
-}
-
-export interface OrderResponse {
-    orders: Order[];
+    items: Product[];
+    totalPrice: number;
 }
 
 const SellerOrdersPage = () => {
     const { user: authUser, token } = useAuth();
     const navigate = useNavigate();
-    const [orderData, setOrderData] = useState<OrderResponse | null>(null);
+    const [orderData, setOrderData] = useState<Order[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +54,7 @@ const SellerOrdersPage = () => {
                     throw new Error('Failed to fetch orders');
                 }
 
-                const data: OrderResponse = await response.json();
+                const data: Order[] = await response.json();
                 setOrderData(data);
                 setError(null);
             } catch (err) {
@@ -96,23 +98,43 @@ const SellerOrdersPage = () => {
                 <table className="min-w-full text-left text-sm text-gray-700">
                     <thead className="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">User ID</th>
-                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">Shipping Address</th>
-                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">Item ID</th>
-                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">Quantity</th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                User ID
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Shipping Address
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Item ID
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Quantity
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {orderData.orders.map((order, orderIndex) =>
-                            order.items.map((item, itemIndex) => (
-                                <tr key={`${orderIndex}-${itemIndex}`} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4">{order.userId}</td>
-                                    <td className="px-6 py-4">{order.shippingAddress}</td>
-                                    <td className="px-6 py-4">{item.id}</td>
-                                    <td className="px-6 py-4">{item.quantity}</td>
-                                </tr>
-                            ))
-                        )}
+                        {orderData.map((order, orderIndex) => (
+                            <>
+                                <div>Order {order.id}</div>
+                                {order.items.map((item, itemIndex) => (
+                                    <tr
+                                        key={`${orderIndex}-${itemIndex}`}
+                                        className="hover:bg-gray-50 transition-colors"
+                                    >
+                                        <td className="px-6 py-4">
+                                            {order.userId}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {order.shippingAddress}
+                                        </td>
+                                        <td className="px-6 py-4">{item.id}</td>
+                                        <td className="px-6 py-4">
+                                            {item.quantity}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </>
+                        ))}
                     </tbody>
                 </table>
             </div>
