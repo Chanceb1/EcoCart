@@ -97,16 +97,24 @@ export default function InventoryPage(): JSX.Element {
                         <div key={product.id} className="border rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <div>
-                                    <h1 className="font-semibold">
-                                        {product.name}
-                                    </h1>
-                                    <p className="text-sm text-gray-500">
-                                        {product.category} •{' '}
-                                        {product.recycle_method}
-                                    </p>
-                                    <h2 className="text-sm text-gray-200 mt-4">
-                                        {product.description}
-                                    </h2>
+                                    <div className="flex">
+                                        <img
+                                            src={`${apiBaseUrl}/${product.imageUrl}`}
+                                            className="h-24 w-48 object-cover mr-4"
+                                        />
+                                        <div>
+                                            <h1 className="font-semibold">
+                                                {product.name}
+                                            </h1>
+                                            <p className="text-sm text-gray-500">
+                                                {product.category} •{' '}
+                                                {product.recycle_method}
+                                            </p>
+                                            <h2 className="text-sm text-gray-200 mt-4">
+                                                {product.description}
+                                            </h2>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <span
