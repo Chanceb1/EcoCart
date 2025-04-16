@@ -17,6 +17,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
 import ListingPage from './pages/ListingsPage';
 import UserManagementPage from './pages/UserManagementPage';
+import SellerOrdersPage from './pages/SellerOrdersPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import InventoryPage from './pages/InventoryPage';
 
@@ -74,6 +75,11 @@ export const router = createBrowserRouter([
             {
                 path: 'manage-users',
                 element: <UserManagementPage />
+            },
+            {
+                path: 'seller-orders',
+                element: <SellerOrdersPage />
+
             },
             // Protected routes
             {

@@ -75,7 +75,7 @@ export default function CheckoutPage() {
 
     if (data && !error) {
         return (
-            <div className="text-center">
+            <div className="mb-50 mt-50 text-center text-3xl">
                 <h2>Order submitted successfully!</h2>
             </div>
         );

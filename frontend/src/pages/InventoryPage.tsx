@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Product {
-    id?: number;
+    id: number;
     name: string;
     description: string;
     price: number;
@@ -20,7 +20,7 @@ interface Product {
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 export default function InventoryPage(): JSX.Element {
-    const { token } = useAuth();
+    const { user, token } = useAuth();
     const [products, setProducts] = useState<Product[]>([]);
     const [productsLoading, setProductsLoading] = useState(true); // Set initial loading state to true
     const [productsError, setProductsError] = useState<string | null>(null);
@@ -75,7 +75,9 @@ export default function InventoryPage(): JSX.Element {
 
     return (
         <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-            <h2 className="text-2xl font-bold mb-6">Your Inventory</h2>
+            <h2 className="text-2xl font-bold mb-6">
+                {user?.role === 'admin' ? 'All' : 'Your'} Inventory
+            </h2>
 
             {productsError && (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
@@ -95,20 +97,28 @@ export default function InventoryPage(): JSX.Element {
                         <div key={product.id} className="border rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <div>
-                                    <h1 className="font-semibold">
-                                        {product.name}
-                                    </h1>
-                                    <p className="text-sm text-gray-500">
-                                        {product.category} •{' '}
-                                        {product.recycle_method}
-                                    </p>
-                                    <h2 className="text-sm text-gray-200 mt-4">
-                                        {product.description}
-                                    </h2>
+                                    <div className="flex">
+                                        <img
+                                            src={`${apiBaseUrl}/${product.imageUrl}`}
+                                            className="h-24 w-48 object-cover mr-4"
+                                        />
+                                        <div>
+                                            <h1 className="font-semibold">
+                                                {product.name}
+                                            </h1>
+                                            <p className="text-sm text-gray-500">
+                                                {product.category} •{' '}
+                                                {product.recycle_method}
+                                            </p>
+                                            <h2 className="text-sm text-gray-200 mt-4">
+                                                {product.description}
+                                            </h2>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <span
-                                        className={`px-2 py-1 rounded-full text-sm bg-green-400`}
+                                        className={`px-2 py-1 rounded-full text-sm bg-green-400 dark:bg-green-800`}
                                     >
                                         ${product.price}
                                     </span>

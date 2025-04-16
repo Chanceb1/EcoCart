@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { currencyFormatter } from '@/Utils/formatting';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 interface OrderProduct {
     id: string;
@@ -47,7 +47,7 @@ const UserAccountPage = () => {
 
             try {
                 const response = await fetch(
-                    `${apiBaseUrl}api/orders/user/${authUser.id}`,
+                    `${apiBaseUrl}/api/orders/user/${authUser.id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -68,7 +68,9 @@ const UserAccountPage = () => {
                 }
             } catch (err) {
                 setOrderError(
-                    err instanceof Error ? err.message : 'Failed to fetch orders'
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to fetch orders'
                 );
                 setOrders([]);
             } finally {
@@ -105,7 +107,7 @@ const UserAccountPage = () => {
     const handleSaveClick = async () => {
         try {
             const response = await fetch(
-                `${apiBaseUrl}/api/users/${authUser?.id}`,
+                `${apiBaseUrl}/api/users/user/${authUser?.id}`,
                 {
                     method: 'PUT',
                     headers: {
