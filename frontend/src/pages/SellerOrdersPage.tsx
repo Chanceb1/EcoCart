@@ -1,24 +1,23 @@
-import { JSX, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useHttp from '../Hooks/useHttp';
 import { useAuth } from '@/contexts/AuthContext';
-import { currencyFormatter } from '@/Utils/formatting';
+import { Button } from '@/components/ui/Button';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 interface Product {
-    id: string;
+    id: number;
     name: string;
     price: number;
     quantity: number;
 }
 
 interface Order {
-    id: string;
+    id: number;
     userId: number;
     userEmail: string;
     orderDate: Date;
-    status: string;
+    status: 'pending' | 'completed' | 'cancelled';
     shippingAddress: string;
     items: Product[];
     totalPrice: number;
@@ -26,10 +25,10 @@ interface Order {
 
 const SellerOrdersPage = () => {
     const { user: authUser, token } = useAuth();
-    const navigate = useNavigate();
     const [orderData, setOrderData] = useState<Order[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -70,7 +69,7 @@ const SellerOrdersPage = () => {
         };
 
         fetchOrders();
-    }, [authUser, token]);
+    }, [authUser, token, reloadFlag]);
 
     if (isLoading) {
         return (
@@ -88,6 +87,32 @@ const SellerOrdersPage = () => {
             </div>
         );
     }
+
+    const cancelOrder = async (id: number) => {
+        await fetch(`${apiBaseUrl}/api/orders/order/${id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'cancelled' })
+        });
+
+        setReloadFlag(!reloadFlag);
+    };
+
+    const completeOrder = async (id: number) => {
+        await fetch(`${apiBaseUrl}/api/orders/order/${id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'completed' })
+        });
+
+        setReloadFlag(!reloadFlag);
+    };
 
     return (
         <div className="container mx-auto px-4 py-10">
@@ -107,6 +132,9 @@ const SellerOrdersPage = () => {
                             </th>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
                                 Items
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Action
                             </th>
                         </tr>
                     </thead>
@@ -131,6 +159,37 @@ const SellerOrdersPage = () => {
                                             </div>
                                         )
                                     )}
+                                </td>
+                                <td className="px-6 py-4 capitalize">
+                                    <span
+                                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                            order.status === 'completed'
+                                                ? 'bg-green-100 text-green-700 dark:bg-green-400 dark:text-green-900'
+                                                : order.status === 'cancelled'
+                                                ? 'bg-red-100 text-red-700 dark:bg-red-300 dark:text-white'
+                                                : 'bg-gray-100 text-gray-700 dark:bg-gray-300 dark:text-black'
+                                        }`}
+                                    >
+                                        {order.status}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        className="ml-4 text-green-400 bg-green-800"
+                                        onClick={() => completeOrder(order.id)}
+                                    >
+                                        ✔
+                                    </Button>
+                                    <Button
+                                        size="icon"
+                                        variant="destructive"
+                                        className="ml-4"
+                                        onClick={() => cancelOrder(order.id)}
+                                    >
+                                        ❌
+                                    </Button>
                                 </td>
                             </tr>
                         ))}

@@ -87,6 +87,25 @@ orderRouter.post('/', authenticate, async (req, res): Promise<any> => {
     }
 });
 
+orderRouter.put(
+    '/order/:orderId',
+    authenticate,
+    async (req, res): Promise<any> => {
+        try {
+            const orderId = parseInt(req.params.orderId);
+
+            const order = await Order.findByPk(orderId);
+
+            order?.set('status', req.body.status);
+            await order?.save();
+
+            res.status(201).json({ message: 'Order created!' });
+        } catch (error) {
+            res.status(500).json({ message: 'Failed to create order.' });
+        }
+    }
+);
+
 interface OrderProduct {
     id: string;
     name: string;
