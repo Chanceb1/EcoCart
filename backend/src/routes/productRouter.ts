@@ -125,6 +125,8 @@ productRouter.get(
  * /api/products:
  *   post:
  *     summary: Creates a new product
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Products]
  *     requestBody:
  *       required: true
@@ -209,6 +211,8 @@ productRouter.post(
  * /api/products/{id}:
  *   put:
  *     summary: Updates a product by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Products]
  *     parameters:
  *       - in: path
@@ -316,6 +320,8 @@ productRouter.put(
  * /api/products/{id}:
  *   delete:
  *     summary: Deletes a product by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Products]
  *     parameters:
  *       - in: path

@@ -9,6 +9,8 @@ const userRouter = express.Router();
  * /api/users:
  *   get:
  *     summary: Returns all users
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     responses:
  *       200:
@@ -41,6 +43,8 @@ userRouter.get(
  * /api/users/{id}:
  *   get:
  *     summary: Returns a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -91,6 +95,8 @@ userRouter.get(
  * /api/users:
  *   post:
  *     summary: Creates a new user
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -157,6 +163,8 @@ userRouter.post(
  * /api/users/{id}:
  *   put:
  *     summary: Updates a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -244,6 +252,8 @@ userRouter.put(
  * /api/users/{id}:
  *   delete:
  *     summary: Deletes a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path

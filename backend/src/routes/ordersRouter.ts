@@ -20,6 +20,8 @@ interface OrderRequest {
  * /api/orders:
  *   post:
  *     summary: Create a new order
+ *     security:
+ *       - bearerAuth: []
  *     tags:
  *       - Orders
  *     requestBody:
@@ -105,6 +107,8 @@ interface OrderResponse {
  * /api/orders/user/{userId}:
  *   get:
  *     summary: Get order history for a user
+ *     security:
+ *       - bearerAuth: []
  *     tags:
  *       - Orders
  *     parameters:
