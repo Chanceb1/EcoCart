@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import User from '../models/userModel';
 import { authenticate } from '../middleware/auth';
+import Product from '../models/productModel';
+import Order from '../models/orderModel';
 
 const userRouter = express.Router();
 
@@ -9,6 +11,8 @@ const userRouter = express.Router();
  * /api/users:
  *   get:
  *     summary: Returns all users
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     responses:
  *       200:
@@ -41,6 +45,8 @@ userRouter.get(
  * /api/users/{id}:
  *   get:
  *     summary: Returns a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -56,7 +62,7 @@ userRouter.get(
  *         description: User not found
  */
 userRouter.get(
-    '/:id',
+    '/user/:id',
     authenticate,
     async (req: Request, res: Response): Promise<void> => {
         try {
@@ -91,6 +97,8 @@ userRouter.get(
  * /api/users:
  *   post:
  *     summary: Creates a new user
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -157,6 +165,8 @@ userRouter.post(
  * /api/users/{id}:
  *   put:
  *     summary: Updates a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -244,6 +254,8 @@ userRouter.put(
  * /api/users/{id}:
  *   delete:
  *     summary: Deletes a user by ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -287,6 +299,65 @@ userRouter.delete(
         } catch (error) {
             console.error('Error deleting user:', error);
             res.status(500).json({ message: 'Failed to delete user.' });
+        }
+    }
+);
+
+interface SellerStats {
+    totalListings: number;
+    totalOrders: number;
+    totalItems: number;
+}
+
+userRouter.get(
+    '/sellerstats',
+    authenticate,
+    async (req: Request, res: Response): Promise<void> => {
+        try {
+            if (!['seller', 'admin'].includes(req.user?.role ?? '')) {
+                return void res.status(401).json({
+                    message: 'You are not a seller'
+                });
+            }
+
+            const totalListings = await Product.count({
+                where: { sellerId: req.user?.id }
+            });
+
+            const totalOrders = await (
+                await Promise.all(
+                    (
+                        await Order.findAll()
+                    ).filter(
+                        async order =>
+                            await Promise.all(
+                                order.products.split(',').map(order =>
+                                    order
+                                        .split(':')
+                                        .map(async ([productId, quantity]) => {
+                                            const product =
+                                                await Product.findByPk(
+                                                    productId
+                                                );
+                                            return (
+                                                product?.sellerId ===
+                                                req.user?.id
+                                            );
+                                        })
+                                )
+                            )
+                    )
+                )
+            ).length;
+
+            res.status(200).json({
+                totalListings,
+                totalOrders,
+                totalItems: totalListings
+            } as SellerStats);
+        } catch (error) {
+            console.error('Error getting seller stats:', error);
+            res.status(500).json({ message: 'Failed to get seller stats.' });
         }
     }
 );

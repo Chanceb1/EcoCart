@@ -36,7 +36,7 @@ const AboutPage = () => {
                     <img
                         src={CarbonNeutral}
                         alt="Eco-friendly products"
-                        className="size-50 mx-auto"
+                        className="size-50 mx-auto dark:brightness-80 dark:invert dark:hue-rotate-170"
                     />
                 </div>
             </div>

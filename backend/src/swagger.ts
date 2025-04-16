@@ -6,9 +6,18 @@ const options = {
     info: {
       title: 'EcoCart API Documentation',
       version: '1.0.0',
-      description: 'API documentation for the EcoCart application',
+      description: 'API documentation for the EcoCart',
     },
-    tags: [  // Define your tags here
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    tags: [
         {
           name: 'Products',
           description: 'Operations related to products',
