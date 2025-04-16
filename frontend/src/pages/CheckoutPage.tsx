@@ -94,10 +94,10 @@ export default function CheckoutPage() {
                 {cartCtx.items.map(item => (
                     <div className=" grid grid-cols-3 gap-4 border-b-2 mb-6 border-dashed">
                     <p className="col-span-2">
-                        {item.name}
+                        {item.name} x{item.quantity}
                     </p>
                     <p className="text-right">
-                    {currencyFormatter.format(item.price)}
+                    {currencyFormatter.format(item.price * item.quantity)}
                     </p>
                 </div>
                 ))}
