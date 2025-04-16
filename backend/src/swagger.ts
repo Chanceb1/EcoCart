@@ -21,6 +21,14 @@ const options = {
           name: 'Orders',
           description: 'Operations related to orders',
         },
+        {
+            name: 'Auth',
+            description: 'Operations related to authentication',
+        },
+        {
+            name: 'Cart',
+            description: 'Operations related to cart management',
+        }
       ],
       servers: [
         {

@@ -8,7 +8,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ErrorPage from './pages/ErrorPage';
 import ContactPage from './pages/ContactPage';
-import UserAccountPage from './pages/UserAccountPage';
+import UserAccountPage from './pages/userAccountPage';
 import SellerDashboard from './pages/SellerDashboard';
 import PrivacyPolicy from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -16,7 +16,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignUpPage';
 import ListingPage from './pages/ListingsPage';
-import UserManagementPage from './pages/UserManagementPage'
+import UserManagementPage from './pages/UserManagementPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 export const router = createBrowserRouter([

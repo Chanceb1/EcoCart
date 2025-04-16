@@ -63,6 +63,14 @@ const seedDatabase = async () => {
                 password: '1234',
                 address: '456 Admin St, City, State 12345',
                 role: 'admin' as const
+            },
+            {
+                firstName: 'Seller',
+                lastName: 'User',
+                email: 'seller@example.com',
+                password: '1234',
+                address: '456 Admin St, City, State 12345',
+                role: 'seller' as const
             }
         ];
 
@@ -97,7 +105,8 @@ const seedDatabase = async () => {
             },
             {
                 name: 'Biodegradable Phone Case',
-                description: 'Eco-friendly phone case made from biodegradable materials',
+                description:
+                    'Eco-friendly phone case made from biodegradable materials',
                 price: 19.99,
                 imageUrl: '/images/phone-case.jpg',
                 category: 'electronics',
@@ -123,22 +132,24 @@ const seedDatabase = async () => {
                 rating: 3
             },
             {
-                name: "Smart Phone",
-                description: "Eco-conscious smartphone. High performance, planet friendly.",
+                name: 'Smart Phone',
+                description:
+                    'Eco-conscious smartphone. High performance, planet friendly.',
                 price: 699.99,
-                imageUrl: "/images/smartphone.jpg",
+                imageUrl: '/images/smartphone.jpg',
                 category: 'electronics',
                 recycle_method: 'metal',
-                rating: 4
+                rating: 4,
+                stock: 3892
             }
         ];
 
         // Create users first
-        await User.bulkCreate(sampleUsers);
+        await User.bulkCreate(sampleUsers, { individualHooks: true });
         console.log('Sample users created successfully');
 
         // Create products
-        await Product.bulkCreate(sampleProducts);
+        await Product.bulkCreate(sampleProducts, { individualHooks: true });
         console.log('Sample products created successfully');
 
         console.log('Database seeded successfully');

@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { currencyFormatter } from '@/Utils/formatting';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/';
+
+interface OrderProduct {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+}
+
+interface Order {
+    id: string;
+    orderDate: string;
+    status: 'pending' | 'completed' | 'cancelled';
+    shippingAddress: string;
+    items: OrderProduct[];
+    totalPrice: number;
+}
 
 const UserAccountPage = () => {
     const { user: authUser, token, login } = useAuth();
@@ -16,6 +33,45 @@ const UserAccountPage = () => {
         address: authUser?.address || ''
     });
     const [error, setError] = useState<string | null>(null);
+    // for user orders
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [orderLoading, setOrderLoading] = useState(false);
+    const [orderError, setOrderError] = useState<string | null>(null);
+
+
+    // fetch orders when component mounts
+    useEffect(() => {
+        const fetchOrders = async () => {
+            if (authUser && authUser.role === 'user') {
+                setOrderLoading(true);
+                try {
+                    const response = await fetch(
+                        `${apiBaseUrl}api/orders/user/${authUser.id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch orders');
+                    }
+
+                    const data = await response.json();
+                    setOrders(data);
+                } catch (err) {
+                    setOrderError(
+                        err instanceof Error ? err.message : 'Failed to fetch orders'
+                    );
+                } finally {
+                    setOrderLoading(false);
+                }
+            }
+        };
+
+        fetchOrders();
+    }, [authUser, token]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -166,6 +222,68 @@ const UserAccountPage = () => {
                                 Edit Profile
                             </Button>
                         </div>
+                    </div>
+                )}
+            </div>
+            <div className="bg-white shadow-md rounded-lg p-6 mt-6">
+                <h2 className="text-2xl font-bold mb-6">Order History</h2>
+
+                {orderError && (
+                    <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                        {orderError}
+                    </div>
+                )}
+
+                {orderLoading ? (
+                    <div className="text-center">Loading orders...</div>
+                ) : orders.length === 0 ? (
+                    <div className="text-center text-gray-500">No orders found</div>
+                ) : (
+                    <div className="space-y-4">
+                        {orders.map((order) => (
+                            <div
+                                key={order.id}
+                                className="border rounded-lg p-4 hover:bg-gray-50"
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 className="font-semibold">
+                                            Order #{order.id}
+                                        </h3>
+                                        <p className="text-sm text-gray-500">
+                                            {new Date(order.orderDate).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'completed'
+                                            ? 'bg-green-100 text-green-800'
+                                            : order.status === 'pending'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-red-100 text-red-800'
+                                        }`}>
+                                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                    </span>
+                                </div>
+                                <div className="text-sm">
+                                    <p>
+                                        <span className="font-medium">Shipping Address:</span>{' '}
+                                        {order.shippingAddress || 'No address provided'}
+                                    </p>
+                                    <p className="mt-2 font-medium">Products:</p>
+                                    <ul className="space-y-2 mt-1">
+                                        {order.items.map((item) => (
+                                            <li key={item.id} className="flex justify-between text-gray-600">
+                                                <span>{item.name} (x{item.quantity})</span>
+                                                <span>{currencyFormatter.format(item.price * item.quantity)}</span>
+                                            </li>
+                                        ))}
+                                        <li className="flex justify-between font-semibold border-t pt-2 mt-2">
+                                            <span>Total:</span>
+                                            <span>{currencyFormatter.format(order.totalPrice)}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
