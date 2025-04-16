@@ -324,31 +324,25 @@ userRouter.get(
                 where: { sellerId: req.user?.id }
             });
 
-            const totalOrders = await (
+            const totalOrders = (
                 await Promise.all(
                     (
                         await Order.findAll()
-                    ).filter(
+                    ).map(
                         async order =>
                             await Promise.all(
-                                order.products.split(',').map(order =>
-                                    order
-                                        .split(':')
-                                        .map(async ([productId, quantity]) => {
-                                            const product =
-                                                await Product.findByPk(
-                                                    productId
-                                                );
-                                            return (
-                                                product?.sellerId ===
-                                                req.user?.id
-                                            );
-                                        })
-                                )
+                                order.products.split(',').map(async order => {
+                                    const product = await Product.findByPk(
+                                        order.split(':')[0]
+                                    );
+                                    return product?.sellerId === req.user?.id;
+                                })
                             )
                     )
                 )
-            ).length;
+            )
+                .map(x => x.some(x => x))
+                .filter(x => x).length;
 
             res.status(200).json({
                 totalListings,
