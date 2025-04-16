@@ -85,7 +85,7 @@ const Listing = () => {
                     <Input id="recycleMethod" value={recycleMethod} onChange={(e) => setRecycleMethod(e.target.value)} required />
                 </div>
                 <div>
-                    <Label htmlFor="imageUrl">Image URL (optional)</Label>
+                    <Label htmlFor="imageUrl">Image URL</Label>
                     <Input id="imageUrl" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
                 </div>
                 <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
