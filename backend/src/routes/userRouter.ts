@@ -56,7 +56,7 @@ userRouter.get(
  *         description: User not found
  */
 userRouter.get(
-    '/:id',
+    '/user/:id',
     authenticate,
     async (req: Request, res: Response): Promise<void> => {
         try {
