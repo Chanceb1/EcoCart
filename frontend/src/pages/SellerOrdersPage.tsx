@@ -111,27 +111,28 @@ const SellerOrdersPage = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {orderData.map((order, orderIndex) => (
-                            <>
-                                <tr className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4">
-                                        {order.userId}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {order.shippingAddress}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {order.items.map(
-                                            (product, productIndex) => (
-                                                <div>
-                                                    {product.quantity}x -{' '}
-                                                    {product.name}
-                                                </div>
-                                            )
-                                        )}
-                                    </td>
-                                </tr>
-                            </>
+                        {orderData.map(order => (
+                            <tr
+                                key={order.id}
+                                className="hover:bg-gray-50 transition-colors dark:hover:bg-gray-600"
+                            >
+                                <td className="px-6 py-4">{order.userId}</td>
+                                <td className="px-6 py-4">
+                                    {order.shippingAddress}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {order.items.map(
+                                        (product, productIndex) => (
+                                            <div
+                                                key={`${order.id}-${productIndex}`}
+                                            >
+                                                {product.quantity}x -{' '}
+                                                {product.name}
+                                            </div>
+                                        )
+                                    )}
+                                </td>
+                            </tr>
                         ))}
                     </tbody>
                 </table>
