@@ -269,10 +269,10 @@ const UserAccountPage = () => {
                                     <span
                                         className={`px-2 py-1 rounded-full text-sm ${
                                             order.status === 'completed'
-                                                ? 'bg-green-100 text-green-800'
+                                                ? 'bg-green-100 text-green-800 dark:bg-red-400 dark:text-red-800'
                                                 : order.status === 'pending'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-red-100 text-red-800'
+                                                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-400 dark:text-yellow-800'
+                                                : 'bg-red-100 text-red-800 dark:bg-red-400 dark:text-red-800'
                                         }`}
                                     >
                                         {order.status.charAt(0).toUpperCase() +
@@ -294,7 +294,7 @@ const UserAccountPage = () => {
                                         {order.items.map(item => (
                                             <li
                                                 key={item.id}
-                                                className="flex justify-between text-gray-600"
+                                                className="flex justify-between text-gray-700"
                                             >
                                                 <span>
                                                     {item.name} (x
