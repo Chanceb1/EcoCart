@@ -19,9 +19,7 @@ export interface OrderResponse {
     };
 }
 
-
 const SellerOrdersPage = () => {
-    
     const { user: authUser, token } = useAuth();
     const navigate = useNavigate();
     const [orderData, setOrderData] = useState<OrderResponse | null>(null);
@@ -37,13 +35,16 @@ const SellerOrdersPage = () => {
             }
 
             try {
-                const response = await fetch(`${apiBaseUrl}/api/orders`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
+                const response = await fetch(
+                    `${apiBaseUrl}/api/orders/seller/${authUser?.id}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        }
                     }
-                });
+                );
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch orders');
@@ -53,7 +54,11 @@ const SellerOrdersPage = () => {
                 setOrderData(data);
                 setError(null);
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to fetch orders');
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to fetch orders'
+                );
             } finally {
                 setIsLoading(false);
             }
@@ -111,6 +116,6 @@ const SellerOrdersPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default SellerOrdersPage;
