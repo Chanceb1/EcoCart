@@ -173,7 +173,7 @@ productRouter.post(
     authenticate,
     async (req: Request, res: Response): Promise<void> => {
         try {
-            if (req.user?.role !== 'seller') {
+            if (!['seller', 'admin'].includes(req.user?.role ?? '')) {
                 return void res.status(401).json({
                     message: 'You do not have permission to create products'
                 });
@@ -194,7 +194,7 @@ productRouter.post(
                 category: 'electronics', // Default category, can be changed as needed
                 recycle_method: 'paper', // Default recycle method, can be changed as needed
                 rating: 5, // Default rating, can be changed as needed
-                sellerId: req.user.id
+                sellerId: req.user!.id
             });
 
             res.status(201).json(newProduct);
