@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { currencyFormatter } from '@/Utils/formatting';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/';
 
 interface OrderProduct {
     id: string;
