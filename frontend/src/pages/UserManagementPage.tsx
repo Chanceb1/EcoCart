@@ -1,5 +1,6 @@
 import { JSX, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/Button';
 
 export interface UserItem {
     id: number;
@@ -16,6 +17,7 @@ export default function UsersPage(): JSX.Element {
     const { token } = useAuth();
     const [users, setUsers] = useState<UserItem[]>([]);
     const [usersLoading, setUsersLoading] = useState(true); // Set initial loading state to true
+    const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -45,7 +47,7 @@ export default function UsersPage(): JSX.Element {
         };
 
         fetchOrders();
-    }, [token]);
+    }, [token, reloadFlag]);
 
     if (usersLoading) {
         return (
@@ -63,6 +65,17 @@ export default function UsersPage(): JSX.Element {
             </div>
         );
     }
+
+    const deleteUser = async (id: number) => {
+        await fetch(`${apiBaseUrl}/api/users/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        setReloadFlag(!reloadFlag);
+    };
 
     return (
         <div className="container mx-auto px-4 py-10">
@@ -85,6 +98,9 @@ export default function UsersPage(): JSX.Element {
                             </th>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
                                 Role
+                            </th>
+                            <th className="px-6 py-4 font-semibold uppercase tracking-wider">
+                                Action
                             </th>
                         </tr>
                     </thead>
@@ -109,6 +125,16 @@ export default function UsersPage(): JSX.Element {
                                     >
                                         {user.role}
                                     </span>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <Button
+                                        size="icon"
+                                        variant="destructive"
+                                        className="ml-4"
+                                        onClick={() => deleteUser(user.id)}
+                                    >
+                                        ❌
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
