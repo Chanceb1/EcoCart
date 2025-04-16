@@ -14,7 +14,7 @@ export interface UserItem {
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 export default function UsersPage(): JSX.Element {
-    const { token } = useAuth();
+    const { user: authUser, token } = useAuth();
     const [users, setUsers] = useState<UserItem[]>([]);
     const [usersLoading, setUsersLoading] = useState(true); // Set initial loading state to true
     const [reloadFlag, setReloadFlag] = useState<boolean>(false);
@@ -128,6 +128,7 @@ export default function UsersPage(): JSX.Element {
                                 </td>
                                 <td className="px-6 py-4">
                                     <Button
+                                        disabled={user.id === authUser?.id}
                                         size="icon"
                                         variant="destructive"
                                         className="ml-4"
