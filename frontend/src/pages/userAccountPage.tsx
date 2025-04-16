@@ -38,7 +38,6 @@ const UserAccountPage = () => {
     const [orderLoading, setOrderLoading] = useState(true); // Set initial loading state to true
     const [orderError, setOrderError] = useState<string | null>(null);
 
-<<<<<<< HEAD
     useEffect(() => {
         const fetchOrders = async () => {
             if (!authUser || authUser.role !== 'user') {
@@ -52,27 +51,12 @@ const UserAccountPage = () => {
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
-=======
-    // fetch orders when component mounts
-    useEffect(() => {
-        const fetchOrders = async () => {
-            if (authUser) {
-                setOrderLoading(true);
-                try {
-                    const response = await fetch(
-                        `${apiBaseUrl}/api/orders/user/${authUser.id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
->>>>>>> 2deab1cab4f0ec3989624e15421b0346b0fe2ace
                         }
                     }
                 );
 
                 const data = await response.json();
 
-<<<<<<< HEAD
                 if (response.status === 404) {
                     setOrders([]);
                     setOrderError(null);
@@ -81,18 +65,6 @@ const UserAccountPage = () => {
                 } else {
                     setOrders(Array.isArray(data) ? data : []);
                     setOrderError(null);
-=======
-                    const data = await response.json();
-                    setOrders(data);
-                } catch (err) {
-                    setOrderError(
-                        err instanceof Error
-                            ? err.message
-                            : 'Failed to fetch orders'
-                    );
-                } finally {
-                    setOrderLoading(false);
->>>>>>> 2deab1cab4f0ec3989624e15421b0346b0fe2ace
                 }
             } catch (err) {
                 setOrderError(
