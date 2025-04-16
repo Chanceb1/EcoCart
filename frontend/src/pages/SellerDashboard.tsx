@@ -1,10 +1,58 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect, useState } from 'react';
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
+
+interface SellerStats {
+    totalListings: number;
+    totalOrders: number;
+    totalItems: number;
+}
 
 const SellerDashboardPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+    const [sellerStats, setSellerStats] = useState<SellerStats>({
+        totalListings: 0,
+        totalOrders: 0,
+        totalItems: 0
+    });
+    const [sellerStatsLoading, setSellerStatsLoading] = useState(true); // Set initial loading state to true
+    const [sellerStatsError, setSellerStatsError] = useState<string | null>(
+        null
+    );
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            setSellerStatsLoading(true);
+
+            try {
+                const response = await fetch(
+                    `${apiBaseUrl}/api/users/sellerstats`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+                setSellerStats(data);
+            } catch (err) {
+                setSellerStatsError(
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to fetch orders'
+                );
+            } finally {
+                setSellerStatsLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, [user, token]);
 
     return (
         <div className="container mx-auto py-12 px-4">
@@ -28,7 +76,9 @@ const SellerDashboardPage = () => {
                     <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Listings</p>
-                        <p className="text-2xl font-bold">123</p>
+                        <p className="text-2xl font-bold">
+                            {sellerStats.totalListings}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-gray-100 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
@@ -44,7 +94,9 @@ const SellerDashboardPage = () => {
                     <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Orders</p>
-                        <p className="text-2xl font-bold">56</p>
+                        <p className="text-2xl font-bold">
+                            {sellerStats.totalOrders}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-gray-100 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
@@ -62,7 +114,9 @@ const SellerDashboardPage = () => {
                     <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Items</p>
-                        <p className="text-2xl font-bold">350</p>
+                        <p className="text-2xl font-bold">
+                            {sellerStats.totalItems}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-gray-200 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
