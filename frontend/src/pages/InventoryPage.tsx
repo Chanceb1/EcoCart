@@ -24,6 +24,7 @@ export default function InventoryPage(): JSX.Element {
     const [products, setProducts] = useState<Product[]>([]);
     const [productsLoading, setProductsLoading] = useState(true); // Set initial loading state to true
     const [productsError, setProductsError] = useState<string | null>(null);
+    const [reloadFlag, setReloadFlag] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -59,7 +60,18 @@ export default function InventoryPage(): JSX.Element {
         };
 
         fetchOrders();
-    }, [token]);
+    }, [token, reloadFlag]);
+
+    const deleteProduct = async (id: number) => {
+        await fetch(`${apiBaseUrl}/api/products/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        setReloadFlag(!reloadFlag);
+    };
 
     return (
         <div className="bg-white shadow-md rounded-lg p-6 mt-6">
@@ -94,11 +106,23 @@ export default function InventoryPage(): JSX.Element {
                                         {product.description}
                                     </h2>
                                 </div>
-                                <span
-                                    className={`px-2 py-1 rounded-full text-sm bg-green-400`}
-                                >
-                                    ${product.price}
-                                </span>
+                                <div>
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-sm bg-green-400`}
+                                    >
+                                        ${product.price}
+                                    </span>
+                                    <Button
+                                        size="icon"
+                                        variant="destructive"
+                                        className="ml-4"
+                                        onClick={() =>
+                                            deleteProduct(product.id)
+                                        }
+                                    >
+                                        ❌
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     ))}
