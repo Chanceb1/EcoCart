@@ -118,7 +118,7 @@ export default function InventoryPage(): JSX.Element {
                                 </div>
                                 <div>
                                     <span
-                                        className={`px-2 py-1 rounded-full text-sm bg-green-400`}
+                                        className={`px-2 py-1 rounded-full text-sm bg-green-400 dark:bg-green-800`}
                                     >
                                         ${product.price}
                                     </span>

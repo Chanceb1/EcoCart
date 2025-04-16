@@ -79,13 +79,13 @@ export default function UsersPage(): JSX.Element {
 
     return (
         <div className="container mx-auto px-4 py-10">
-            <h1 className="text-4xl font-extrabold text-green-600 text-center mb-10">
+            <h1 className="text-4xl font-extrabold text-green-600 dark:text-green-500 text-center mb-10">
                 Registered Users
             </h1>
 
             <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
                 <table className="min-w-full text-left text-sm text-gray-700">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className="bg-gray-50 border-b border-gray-200 dark:text-black dark:bg-gray-300 dark:border-gray-300">
                         <tr>
                             <th className="px-6 py-4 font-semibold uppercase tracking-wider">
                                 First Name
@@ -108,7 +108,7 @@ export default function UsersPage(): JSX.Element {
                         {users.map(user => (
                             <tr
                                 key={user.id}
-                                className="hover:bg-gray-50 transition-colors"
+                                className="hover:bg-gray-50 transition-colors dark:hover:bg-gray-600"
                             >
                                 <td className="px-6 py-4">{user.firstName}</td>
                                 <td className="px-6 py-4">{user.lastName}</td>
@@ -117,10 +117,10 @@ export default function UsersPage(): JSX.Element {
                                     <span
                                         className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                                             user.role === 'admin'
-                                                ? 'bg-green-100 text-green-700'
+                                                ? 'bg-green-100 text-green-700 dark:bg-green-400 dark:text-green-900'
                                                 : user.role === 'seller'
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'bg-gray-100 text-gray-700'
+                                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-300 dark:text-black'
+                                                : 'bg-gray-100 text-gray-700 dark:bg-gray-300 dark:text-black'
                                         }`}
                                     >
                                         {user.role}

@@ -8,12 +8,12 @@ const SellerDashboardPage = () => {
 
     return (
         <div className="container mx-auto py-12 px-4">
-            <h1 className="text-4xl font-bold text-center text-green-600 dark:text-green-400 mb-8">
+            <h1 className="text-4xl font-bold text-center text-green-600 dark:text-green-500 mb-8">
                 Welcome, Seller!
             </h1>
 
             <div className="grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold">
                             Create Listing
@@ -25,13 +25,13 @@ const SellerDashboardPage = () => {
                             Create
                         </Button>
                     </div>
-                    <div className="w-px bg-gray-300 dark:bg-gray-600 mx-4"></div>
+                    <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Listings</p>
                         <p className="text-2xl font-bold">123</p>
                     </div>
                 </div>
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold">View Orders</h2>
                         <Button
@@ -41,13 +41,13 @@ const SellerDashboardPage = () => {
                             View
                         </Button>
                     </div>
-                    <div className="w-px bg-gray-300 dark:bg-gray-600 mx-4"></div>
+                    <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Orders</p>
                         <p className="text-2xl font-bold">56</p>
                     </div>
                 </div>
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold">
                             Manage Inventory
@@ -59,13 +59,13 @@ const SellerDashboardPage = () => {
                             Manage
                         </Button>
                     </div>
-                    <div className="w-px bg-gray-300 dark:bg-gray-600 mx-4"></div>
+                    <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Total Items</p>
                         <p className="text-2xl font-bold">350</p>
                     </div>
                 </div>
-                <div className="bg-gray-200 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex">
+                <div className="bg-gray-200 dark:bg-gray-600 dark:text-gray-900 rounded-2xl shadow-md p-6 flex">
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold">
                             Manage Profile
@@ -77,7 +77,7 @@ const SellerDashboardPage = () => {
                             Manage
                         </Button>
                     </div>
-                    <div className="w-px bg-gray-300 dark:bg-gray-600 mx-4"></div>
+                    <div className="w-px bg-gray-300 dark:bg-gray-700 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Profile Info</p>
                         <p className="text-sm">

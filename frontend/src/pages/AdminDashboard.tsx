@@ -9,20 +9,20 @@ const AdminDashboardPage = () => {
 
     return (
         <div className="container mx-auto py-12 px-4">
-            <h1 className="text-4xl font-bold text-green-600 text-left mb-8">
+            <h1 className="text-4xl font-bold text-green-600 dark:text-green-500 text-left mb-8">
                 Administrator Dashboard
             </h1>
 
             <div className="space-y-6">
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
                     <img
                         src={Users}
                         alt="Manage Users"
-                        className="w-24 h-24 rounded-lg mr-6 object-cover"
+                        className="w-24 h-24 rounded-lg mr-6 object-cover dark:invert"
                     />
 
                     <div className="flex-1">
-                        <h2 className="text-xl font-semibold text-green-700">
+                        <h2 className="text-xl font-semibold text-green-700 dark:text-green-500">
                             Manage Users
                         </h2>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -38,14 +38,14 @@ const AdminDashboardPage = () => {
                     </div>
                 </div>
 
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
                     <img
                         src={Listings}
                         alt="Review Products"
-                        className="w-24 h-24 rounded-lg mr-6 object-cover"
+                        className="w-24 h-24 rounded-lg mr-6 object-cover dark:invert"
                     />
                     <div className="flex-1">
-                        <h2 className="text-xl font-semibold text-green-700">
+                        <h2 className="text-xl font-semibold text-green-700 dark:text-green-500">
                             Review Products
                         </h2>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -60,14 +60,14 @@ const AdminDashboardPage = () => {
                     </div>
                 </div>
 
-                <div className="bg-gray-100 dark:bg-gray-800 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
+                <div className="bg-gray-100 dark:bg-gray-600 dark:text-white rounded-2xl shadow-md p-6 flex items-center">
                     <img
                         src={Analytics}
                         alt="View Orders"
-                        className="w-24 h-24 rounded-lg mr-6 object-cover"
+                        className="w-24 h-24 rounded-lg mr-6 object-cover dark:invert"
                     />
                     <div className="flex-1">
-                        <h2 className="text-xl font-semibold text-green-700">
+                        <h2 className="text-xl font-semibold text-green-700 dark:text-green-500">
                             View Orders
                         </h2>
                         <p className="text-sm text-gray-600 dark:text-gray-300">

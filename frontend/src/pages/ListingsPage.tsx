@@ -66,9 +66,9 @@ const Listing = () => {
             <h2 className="text-2xl font-bold mb-4 text-center">
                 Create a New Listing
             </h2>
-            <form onSubmit={handleListSubmit} className="space-y-4">
+            <form onSubmit={handleListSubmit} className="w-full space-y-4">
                 <div>
-                    <Label htmlFor="name">Product Name</Label>
+                    <Label className="pb-2" htmlFor="name">Product Name</Label>
                     <Input
                         id="name"
                         value={name}
@@ -77,7 +77,7 @@ const Listing = () => {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="price">Price ($)</Label>
+                    <Label className="pb-2" htmlFor="price">Price ($)</Label>
                     <Input
                         id="price"
                         type="number"
@@ -88,7 +88,7 @@ const Listing = () => {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label className="pb-2" htmlFor="description">Description</Label>
                     <Input
                         id="description"
                         value={description}
@@ -97,7 +97,7 @@ const Listing = () => {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="category">Category</Label>
+                    <Label className="pb-2" htmlFor="category">Category</Label>
                     <Input
                         id="category"
                         value={category}
@@ -106,7 +106,7 @@ const Listing = () => {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="recycleMethod">Recycle Method</Label>
+                    <Label className="pb-2" htmlFor="recycleMethod">Recycle Method</Label>
                     <Input
                         id="recycleMethod"
                         value={recycleMethod}
@@ -115,7 +115,7 @@ const Listing = () => {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="imageUrl">Image URL</Label>
+                    <Label className="pb-2" htmlFor="imageUrl">Image URL</Label>
                     <Input
                         id="imageUrl"
                         value={imageUrl}
