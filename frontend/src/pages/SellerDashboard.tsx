@@ -3,10 +3,8 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 
 const SellerDashboardPage = () => {
-
     const navigate = useNavigate();
-    const {user} = useAuth();
-
+    const { user } = useAuth();
 
     return (
         <div className="container mx-auto py-12 px-4">
@@ -20,7 +18,10 @@ const SellerDashboardPage = () => {
                         <h2 className="text-lg font-semibold">
                             Create Listing
                         </h2>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => navigate('/listing-form')} >
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/listing-form')}
+                        >
                             Create
                         </Button>
                     </div>
@@ -48,7 +49,10 @@ const SellerDashboardPage = () => {
                         <h2 className="text-lg font-semibold">
                             Manage Inventory
                         </h2>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/inventory')}
+                        >
                             Manage
                         </Button>
                     </div>
@@ -63,14 +67,19 @@ const SellerDashboardPage = () => {
                         <h2 className="text-lg font-semibold">
                             Manage Profile
                         </h2>
-                        <Button className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => navigate('/account') }>
+                        <Button
+                            className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                            onClick={() => navigate('/account')}
+                        >
                             Manage
                         </Button>
                     </div>
                     <div className="w-px bg-gray-300 dark:bg-gray-600 mx-4"></div>
                     <div className="flex-1 text-right">
                         <p className="text-lg font-semibold">Profile Info</p>
-                        <p className="text-sm">Name: {user?.firstName} {user?.lastName}</p>
+                        <p className="text-sm">
+                            Name: {user?.firstName} {user?.lastName}
+                        </p>
                         <p className="text-sm">Email: {user?.email}</p>
                         <p className="text-sm">Address: {user?.address}</p>
                         <p className="text-sm">Account ID: {user?.id}</p>

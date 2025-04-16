@@ -47,7 +47,7 @@ const UserAccountPage = () => {
 
             try {
                 const response = await fetch(
-                    `${apiBaseUrl}api/orders/user/${authUser.id}`,
+                    `${apiBaseUrl}/api/orders/user/${authUser.id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -68,7 +68,9 @@ const UserAccountPage = () => {
                 }
             } catch (err) {
                 setOrderError(
-                    err instanceof Error ? err.message : 'Failed to fetch orders'
+                    err instanceof Error
+                        ? err.message
+                        : 'Failed to fetch orders'
                 );
                 setOrders([]);
             } finally {

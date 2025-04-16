@@ -19,6 +19,7 @@ import ListingPage from './pages/ListingsPage';
 import UserManagementPage from './pages/UserManagementPage';
 import SellerOrdersPage from './pages/SellerOrdersPage';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import InventoryPage from './pages/InventoryPage';
 
 export const router = createBrowserRouter([
     {
@@ -102,6 +103,14 @@ export const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute requiredRole={['seller', 'admin']}>
                         <SellerDashboard />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: 'inventory',
+                element: (
+                    <ProtectedRoute requiredRole={['seller', 'admin']}>
+                        <InventoryPage />
                     </ProtectedRoute>
                 )
             },
