@@ -129,7 +129,7 @@ orderRouter.get(
         try {
             if (req.user!.id !== Number(req.params.userId)) {
                 return void res
-                    .status(404)
+                    .status(401)
                     .json({ message: 'You can only check your own orders' });
             }
 
@@ -181,6 +181,96 @@ orderRouter.get(
                     };
                 })
             );
+
+            res.status(200).json(orderHistory);
+        } catch (error) {
+            console.error('Error fetching order history:', error);
+            res.status(500).json({ message: 'Failed to fetch order history' });
+        }
+    }
+);
+
+/**
+ * @swagger
+ * /api/orders/seller/{sellerId}:
+ *   get:
+ *     summary: Get order history for a seller
+ *     tags:
+ *       - Orders
+ *     parameters:
+ *       - in: path
+ *         name: sellerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the seller
+ *     responses:
+ *       200:
+ *         description: Order history retrieved successfully
+ *       404:
+ *         description: No orders found
+ *       500:
+ *         description: Server error
+ */
+orderRouter.get(
+    '/seller/:sellerId',
+    authenticate,
+    async (req: Request, res: Response): Promise<any> => {
+        try {
+            if (req.user!.id !== Number(req.params.sellerId)) {
+                return void res
+                    .status(401)
+                    .json({ message: 'You can only check your own orders' });
+            }
+
+            const orders = await Order.findAll({
+                order: [['orderDate', 'DESC']]
+            });
+
+            if (!orders || orders.length === 0) {
+                return res.status(404).json({ message: 'No orders found' });
+            }
+
+            // Process each order to include product details
+            const orderHistory: OrderResponse[] = (
+                await Promise.all(
+                    orders.map(async order => {
+                        const productEntries = order.products.split(',');
+                        const items: OrderProduct[] = [];
+                        let totalPrice = 0;
+
+                        // Process each product in the order
+                        for (const entry of productEntries) {
+                            const [productId, quantity] = entry.split(':');
+                            const product = await Product.findByPk(productId);
+
+                            if (product) {
+                                if (product.sellerId !== req.user?.id) continue;
+
+                                const itemTotal =
+                                    product.price * parseInt(quantity);
+                                totalPrice += itemTotal;
+
+                                items.push({
+                                    id: product.id.toString(), // Convert to string explicitly
+                                    name: product.name,
+                                    price: product.price,
+                                    quantity: parseInt(quantity)
+                                });
+                            }
+                        }
+
+                        return {
+                            id: order.id.toString(), // Convert to string explicitly
+                            orderDate: order.orderDate,
+                            status: order.status,
+                            shippingAddress: order.shippingAddress,
+                            items,
+                            totalPrice
+                        };
+                    })
+                )
+            ).filter(order => order.items.length);
 
             res.status(200).json(orderHistory);
         } catch (error) {
