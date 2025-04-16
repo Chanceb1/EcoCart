@@ -175,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             variant="outline"
                             size="icon"
                             className={cn(
-                                'bg-green-600 hover:bg-green-700 font-bold w-2/5 gap-2 p-2'
+                                'text-white bg-green-600 hover:bg-green-700 w-2/5 gap-2 p-2'
                             )}
                         >
                             Filter

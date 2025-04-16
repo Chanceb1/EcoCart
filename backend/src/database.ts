@@ -22,7 +22,7 @@ export const initDatabase = async () => {
         setupAssociations();
 
         // Sync all models
-        await sequelize.sync({ alter: true });
+        await sequelize.sync();
         console.log('Database synced successfully');
 
         const userCount = await User.count();
@@ -74,6 +74,14 @@ const seedDatabase = async () => {
             }
         ];
 
+        // Create users first
+        await User.bulkCreate(sampleUsers, { individualHooks: true });
+        console.log('Sample users created successfully');
+
+        const sellerId = await User.findOne({ where: { role: 'seller' } }).then(
+            user => user!.id
+        );
+
         // sample products
         const sampleProducts = [
             {
@@ -83,7 +91,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/water-bottle.jpg',
                 category: 'consumables',
                 recycle_method: 'metal',
-                rating: 4
+                rating: 4,
+                sellerId
             },
             {
                 name: 'Bamboo Utensil Set',
@@ -92,7 +101,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/bamboo-utensils.jpg',
                 category: 'consumables',
                 recycle_method: 'compostable',
-                rating: 3
+                rating: 3,
+                sellerId
             },
             {
                 name: 'Organic Cotton Tote',
@@ -101,7 +111,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/tote-bag.jpg',
                 category: 'storage',
                 recycle_method: 'compostable',
-                rating: 4
+                rating: 4,
+                sellerId
             },
             {
                 name: 'Biodegradable Phone Case',
@@ -111,7 +122,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/phone-case.jpg',
                 category: 'electronics',
                 recycle_method: 'compostable',
-                rating: 5
+                rating: 5,
+                sellerId
             },
             {
                 name: 'Solar-Powered Charger',
@@ -120,7 +132,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/solar-charger.jpg',
                 category: 'electronics',
                 recycle_method: 'metal',
-                rating: 2
+                rating: 2,
+                sellerId
             },
             {
                 name: 'Recycled Paper Notebook',
@@ -129,7 +142,8 @@ const seedDatabase = async () => {
                 imageUrl: '/images/notebook.jpg',
                 category: 'consumables',
                 recycle_method: 'paper',
-                rating: 3
+                rating: 3,
+                sellerId
             },
             {
                 name: 'Smart Phone',
@@ -140,13 +154,10 @@ const seedDatabase = async () => {
                 category: 'electronics',
                 recycle_method: 'metal',
                 rating: 4,
-                stock: 3892
+                stock: 3892,
+                sellerId
             }
         ];
-
-        // Create users first
-        await User.bulkCreate(sampleUsers, { individualHooks: true });
-        console.log('Sample users created successfully');
 
         // Create products
         await Product.bulkCreate(sampleProducts, { individualHooks: true });

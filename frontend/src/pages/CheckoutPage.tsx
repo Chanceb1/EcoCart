@@ -8,27 +8,28 @@ import Error from './ErrorPage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const requestConfig = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-};
-
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 export default function CheckoutPage() {
     const cartCtx = useContext(CartContext);
     const userProgressCtx = useContext(UserProgressContext);
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+
+    const requestConfig = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+
+            Authorization: 'Bearer ' + token
+        }
+    };
 
     const {
         data,
         isLoading: isSending,
         error,
-        sendRequest,
-        clearData
+        sendRequest
     } = useHttp(apiBaseUrl + '/api/orders', requestConfig);
 
     const cartTotal = cartCtx.items.reduce(
@@ -36,26 +37,19 @@ export default function CheckoutPage() {
         0
     );
 
-    function handleFinish() {
-        userProgressCtx.hideCheckout();
-        cartCtx.clearCart();
-        clearData();
-    }
-
-    function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const fd = new FormData(event.currentTarget);
-
-        sendRequest(
+        await sendRequest(
             JSON.stringify({
                 order: {
                     items: cartCtx.items,
-                    userId: user!.id,
                     shippingAddress: ''
                 }
             })
         );
+
+        cartCtx.clearCart();
     }
 
     let actions = (
@@ -68,7 +62,9 @@ export default function CheckoutPage() {
                 >
                     Cancel
                 </button>
-                <Button>Submit Order</Button>
+                <Button className="bg-green-600 dark:bg-gray-900">
+                    Submit Order
+                </Button>
             </div>
         </>
     );
@@ -81,7 +77,6 @@ export default function CheckoutPage() {
         return (
             <div className="text-center">
                 <h2>Order submitted successfully!</h2>
-                <button onClick={handleFinish}>Okay</button>
             </div>
         );
     }
@@ -95,11 +90,22 @@ export default function CheckoutPage() {
                 onSubmit={handleSubmit}
             >
                 <h1 className="text-xl mb-6">Confirm Order</h1>
-                <div className="mb-6">
-                    <h2 className="block text-gray-700 text-sm font-bold mb-2">
+                <div className="ml-4">
+                {cartCtx.items.map(item => (
+                    <div className=" grid grid-cols-3 gap-4 border-b-2 mb-6 border-dashed">
+                    <p className="col-span-2">
+                        {item.name} x{item.quantity}
+                    </p>
+                    <p className="text-right">
+                    {currencyFormatter.format(item.price * item.quantity)}
+                    </p>
+                </div>
+                ))}
+                </div>
+                    <h2 className="text-right text-xl block text-gray-700 font-bold mb-2">
                         Total Amount: {currencyFormatter.format(cartTotal)}
                     </h2>
-                </div>
+                
                 {actions}
             </form>
         </div>

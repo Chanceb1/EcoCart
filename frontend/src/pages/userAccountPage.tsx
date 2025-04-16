@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { currencyFormatter } from '@/Utils/formatting';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000';
 
 interface OrderProduct {
     id: string;
@@ -35,38 +35,44 @@ const UserAccountPage = () => {
     const [error, setError] = useState<string | null>(null);
     // for user orders
     const [orders, setOrders] = useState<Order[]>([]);
-    const [orderLoading, setOrderLoading] = useState(false);
+    const [orderLoading, setOrderLoading] = useState(true); // Set initial loading state to true
     const [orderError, setOrderError] = useState<string | null>(null);
 
-
-    // fetch orders when component mounts
     useEffect(() => {
         const fetchOrders = async () => {
-            if (authUser && authUser.role === 'user') {
-                setOrderLoading(true);
-                try {
-                    const response = await fetch(
-                        `${apiBaseUrl}api/orders/user/${authUser.id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
+            if (!authUser || authUser.role !== 'user') {
+                setOrderLoading(false); // Make sure to set loading false if we're not fetching
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${apiBaseUrl}api/orders/user/${authUser.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
                         }
-                    );
-
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch orders');
                     }
+                );
 
-                    const data = await response.json();
-                    setOrders(data);
-                } catch (err) {
-                    setOrderError(
-                        err instanceof Error ? err.message : 'Failed to fetch orders'
-                    );
-                } finally {
-                    setOrderLoading(false);
+                const data = await response.json();
+
+                if (response.status === 404) {
+                    setOrders([]);
+                    setOrderError(null);
+                } else if (!response.ok) {
+                    throw new Error('Failed to fetch orders');
+                } else {
+                    setOrders(Array.isArray(data) ? data : []);
+                    setOrderError(null);
                 }
+            } catch (err) {
+                setOrderError(
+                    err instanceof Error ? err.message : 'Failed to fetch orders'
+                );
+                setOrders([]);
+            } finally {
+                setOrderLoading(false);
             }
         };
 
@@ -99,7 +105,7 @@ const UserAccountPage = () => {
     const handleSaveClick = async () => {
         try {
             const response = await fetch(
-                `${apiBaseUrl}api/users/${authUser?.id}`,
+                `${apiBaseUrl}/api/users/${authUser?.id}`,
                 {
                     method: 'PUT',
                     headers: {
@@ -237,13 +243,15 @@ const UserAccountPage = () => {
                 {orderLoading ? (
                     <div className="text-center">Loading orders...</div>
                 ) : orders.length === 0 ? (
-                    <div className="text-center text-gray-500">No orders found</div>
+                    <div className="text-center text-gray-500">
+                        No orders found
+                    </div>
                 ) : (
                     <div className="space-y-4">
-                        {orders.map((order) => (
+                        {orders.map(order => (
                             <div
                                 key={order.id}
-                                className="border rounded-lg p-4 hover:bg-gray-50"
+                                className="border rounded-lg p-4"
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
@@ -251,34 +259,60 @@ const UserAccountPage = () => {
                                             Order #{order.id}
                                         </h3>
                                         <p className="text-sm text-gray-500">
-                                            {new Date(order.orderDate).toLocaleDateString()}
+                                            {new Date(
+                                                order.orderDate
+                                            ).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'completed'
-                                            ? 'bg-green-100 text-green-800'
-                                            : order.status === 'pending'
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-sm ${
+                                            order.status === 'completed'
+                                                ? 'bg-green-100 text-green-800'
+                                                : order.status === 'pending'
                                                 ? 'bg-yellow-100 text-yellow-800'
                                                 : 'bg-red-100 text-red-800'
-                                        }`}>
-                                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                        }`}
+                                    >
+                                        {order.status.charAt(0).toUpperCase() +
+                                            order.status.slice(1)}
                                     </span>
                                 </div>
                                 <div className="text-sm">
                                     <p>
-                                        <span className="font-medium">Shipping Address:</span>{' '}
-                                        {order.shippingAddress || 'No address provided'}
+                                        <span className="font-medium">
+                                            Shipping Address:
+                                        </span>{' '}
+                                        {order.shippingAddress ||
+                                            'No address provided'}
                                     </p>
-                                    <p className="mt-2 font-medium">Products:</p>
+                                    <p className="mt-2 font-medium">
+                                        Products:
+                                    </p>
                                     <ul className="space-y-2 mt-1">
-                                        {order.items.map((item) => (
-                                            <li key={item.id} className="flex justify-between text-gray-600">
-                                                <span>{item.name} (x{item.quantity})</span>
-                                                <span>{currencyFormatter.format(item.price * item.quantity)}</span>
+                                        {order.items.map(item => (
+                                            <li
+                                                key={item.id}
+                                                className="flex justify-between text-gray-600"
+                                            >
+                                                <span>
+                                                    {item.name} (x
+                                                    {item.quantity})
+                                                </span>
+                                                <span>
+                                                    {currencyFormatter.format(
+                                                        item.price *
+                                                            item.quantity
+                                                    )}
+                                                </span>
                                             </li>
                                         ))}
                                         <li className="flex justify-between font-semibold border-t pt-2 mt-2">
                                             <span>Total:</span>
-                                            <span>{currencyFormatter.format(order.totalPrice)}</span>
+                                            <span>
+                                                {currencyFormatter.format(
+                                                    order.totalPrice
+                                                )}
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
